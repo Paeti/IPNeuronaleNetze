@@ -2,4 +2,5 @@ pipeline:
   build:
     image: ubuntu
     commands:
+      - apt-get install build-essential    
       - make ci_test
