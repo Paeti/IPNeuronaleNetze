@@ -1,4 +1,5 @@
 pipeline:
   build:
+    image: ubuntu
     commands:
       - make ci_test
