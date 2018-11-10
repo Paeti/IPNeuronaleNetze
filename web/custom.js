@@ -40,7 +40,7 @@ document.addEventListener("keydown", function (e) {
   }
 }, false);
 
-function send(context) {
+function send(canvas) {
   var dataURL = canvas.toDataURL();
   $.ajax({
     type: "POST",
