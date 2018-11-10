@@ -1,0 +1,7 @@
+pipeline:
+  build:
+    image: ubuntu
+    commands:
+      - apt update
+      - apt-get install build-essential -y    
+      - make ci_test
