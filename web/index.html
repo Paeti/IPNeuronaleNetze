@@ -1,0 +1,33 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>IP Hartung</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="/style.css" />
+</head>
+
+<body onload="toggleFullScreen()">
+    <div id="bannerWrapper">
+        <h1 id="issaBiggerText">Drücken Sie Enter und lassen Sie Ihr Alter schätzen</h1>
+        <h2 id="issaSmallerText">und stimmen zu, dass ihr Bild für das Trainieren der
+            Software weiterverwendet wird.</h2>
+    </div>
+    <div id="wrapper">
+        <video autoplay id="webcam">
+        </video>
+    </div>
+    <div id="userForm">
+        <img src="/userForm.png" alt="">
+    </div>
+    <div id="heartLoader">
+        <div></div>
+    </div>
+
+    <!-- height and width needs to get adpopted to the pixels of the webcam-->
+    <canvas id="canvas" height="1040px" width="1380px"></canvas>
+    <script src="/custom.js"></script>
+</body>
+
+</html>
