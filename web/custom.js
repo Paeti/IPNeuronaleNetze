@@ -22,6 +22,7 @@ document.addEventListener("keydown", function (e) {
   } else if (e.keyCode == 13) {
     // Draw the video frame to the canvas and make second stage visible.
     context.drawImage(webcam, 0, 0, canvas.width, canvas.height);
+    //send(canvas);
     user.style.opacity = 0;
     user.style.transitionDuration = "1s";
     loader.style.opacity = 1;
@@ -38,6 +39,19 @@ document.addEventListener("keydown", function (e) {
   
   }
 }, false);
+
+function send(context) {
+  var dataURL = canvas.toDataURL();
+  $.ajax({
+    type: "POST",
+    url: "", //TODO: insert filename which gets the image via post
+    data: { 
+       imgBase64: dataURL
+    }
+  }).done(function(o) {
+    console.log('saved'); 
+  });
+}
 
 function crypticWow(text) {
   setTimeout(function () {
