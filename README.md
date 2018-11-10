@@ -1,7 +1,7 @@
 ## IPNeuronaleNetze
 
 We are currently building a VGG-16 convolutional neural network. It'll be trained for age and gender estimitation.
-For better usage of the trained modell a webserver and RESTapi will be built.
+For better usage of the trained model a webserver and REST API will be built.
 
 
 ## Motivation
@@ -32,7 +32,7 @@ So we're happy that we could choose this as a project at our university, the FH 
 
 Tensorflow and keras are used to build the neural network and to train it.
 Opencv is usesd to prepare the images.
-We are using Flask for setting up a simple RESTapi. Which handles the interaction with our frontend.
+We are using Flask for setting up a simple REST API. Which handles the interaction with our frontend.
 Docker is used to simplify the delivery.
 Continous integration tool of our choice is drone ci.
 
