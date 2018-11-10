@@ -1,6 +1,6 @@
 ## IPNeuronaleNetze
 
-We are currently building a VGG-16 convolutional neural network. It'll be trained for age and gender estimitation.
+We are currently building a VGG-16 convolutional neural network. It'll be trained for age and gender estimation.
 For better usage of the trained model a webserver and REST API will be built.
 
 
@@ -8,11 +8,6 @@ For better usage of the trained model a webserver and REST API will be built.
 
 We're all interested in ai and neural networks and want to learn something about how to implement one.
 So we're happy that we could choose this as a project at our university, the FH Aachen.
-
-
-## Build status
-
-[![Build Status](http://136.243.36.114/api/badges/paeti/IPNeuronaleNetze/status.svg)](https://drone.io)
 
 
 ## Code style
@@ -39,11 +34,17 @@ Continous integration tool of our choice is drone ci.
 
 ## Contribute
 
-<!-- Let people know how they can contribute into your project. A [contributing guideline](https://github.com/zulip/zulip-electron/blob/master/CONTRIBUTING.md) will be a big plus. -->
+We are happy when you're interested in our project. If you want to contribute read our [contributing guideline](https://github.com/Paeti/IPNeuronaleNetze/CONTRIBUTING.md).
+
+
+## Credits
+
+Project structure inspired by [this repo](https://github.com/MrGemy95/Tensorflow-Project-Template).
+Contribution guideline inspired by [this one](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit).
 
 
 ## License
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
-MIT © [Patrick Reckeweg]()
+MIT © [Patrick Reckeweg](https://github.com/Paeti)
