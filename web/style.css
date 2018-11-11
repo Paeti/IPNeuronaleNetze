@@ -1,0 +1,165 @@
+body {
+    margin: 0px;
+}
+
+#wrapper {
+    position: relative;
+    min-height: 100%;
+    overflow: hidden;
+}
+
+#webcam {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#bannerWrapper {
+    position: absolute;
+    top: 0px;
+    width: 100vw;
+    background-color: rgba(10, 15, 12, 0.75);
+    text-align: center;
+    color: white;
+}
+
+#issaBiggerText {
+    font-size: 3vw;
+}
+
+#issaSmallerText {
+    font-size: 2vw;
+}
+
+#userForm {
+    position: absolute;
+    bottom: 0px;
+    height: 75vh;
+    width: 100vw;
+}
+
+#userForm img {
+    height: 100%;
+    display: block;
+    margin: auto;
+}
+
+#canvas {
+    display: hidden;
+    position: absolute;
+    bottom: 0px;
+}
+
+@keyframes pumpItUp {
+    0% {
+        -webkit-transform: scale(0.85);
+        transform: scale(0.85);
+    }
+
+    5% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+
+    39% {
+        -webkit-transform: scale(0.75);
+        transform: scale(0.75);
+    }
+
+    45% {
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+    }
+
+    60% {
+        -webkit-transform: scale(0.85);
+        transform: scale(0.85);
+    }
+
+    100% {
+        -webkit-transform: scale(0.8);
+        transform: scale(0.8);
+    }
+}
+
+@-webkit-keyframes pumpItUp {
+    0% {
+        -webkit-transform: scale(0.85);
+        transform: scale(0.85);
+    }
+
+    5% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+
+    39% {
+        -webkit-transform: scale(0.75);
+        transform: scale(0.75);
+    }
+
+    45% {
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+    }
+
+    60% {
+        -webkit-transform: scale(0.85);
+        transform: scale(0.85);
+    }
+
+    100% {
+        -webkit-transform: scale(0.8);
+        transform: scale(0.8);
+    }
+}
+
+#heartLoader {
+    height: 150px !important;
+    -webkit-transform: translate(-5px, -5px) scale(0.5) translate(5px, 5px);
+    transform: translate(-5px, -5px) scale(0.5) translate(5px, 5px);
+    position: absolute;
+    bottom: 5px;
+    -webkit-animation: pumpItUp 3s infinite cubic-bezier(0.005, 0.01, 0.001, 0.005);
+    animation: pumpItUp 3s infinite cubic-bezier(0.005, 0.01, 0.001, 0.005);
+    width: 100vw;
+    opacity: 0;
+    transition-duration: 1s;
+}
+
+#heartLoader div {
+    width: 120px;
+    height: 120px;
+    display: relative;
+    margin: auto;
+    bottom: 150px;
+    background: #41bea9;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+#heartLoader div:after,
+#heartLoader div:before {
+    content: " ";
+    position: absolute;
+    display: block;
+    width: 120px;
+    height: 120px;
+    background: #41bea9;
+}
+
+#heartLoader div:before {
+    left: -90px;
+    border-radius: 50% 0 0 50%;
+}
+
+#heartLoader div:after {
+    top: -90px;
+    border-radius: 50% 50% 0 0;
+}
