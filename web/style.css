@@ -51,9 +51,9 @@ body {
 }
 
 #canvas {
-    /* display: hidden;
+    display: hidden;
     position: absolute;
-    bottom: 0px; */
+    bottom: 0px;
 }
 
 @keyframes pumpItUp {
