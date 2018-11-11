@@ -54,8 +54,8 @@ Each pull request to the master refers to one issue and closes it.
 Before you submit your pull request consider the following guidelines:
 
 * Name pull request as following:
-- <tag of the ticket>/<__really__ short description waht you'll do>_<nr of ticket it should close>
-- e.g. enh/create_file/method_xy_7
+    - ```<tag of the ticket>/<__really__ short description what you'll do>_<nr of ticket it should close>```
+    - e.g. ```enh/create_file_or_method_xy_7```
 * Make your changes in a new git branch:
 
     ```shell
@@ -106,7 +106,7 @@ That's it! Thank you for your contribution!
 #### After your pull request is merged
 
 After your pull request is merged, you can safely delete your branch and pull the changes
-from the main (upstream) repository:
+from the main repository:
 
 * Delete the remote branch on GitHub either through the GitHub web UI or your local shell as follows:
 
@@ -127,10 +127,12 @@ from the main (upstream) repository:
     ```
 
 
+GitHub also offers ui for merging pull requests and deleting the issue branches.
+
 ## Coding Rules
 
 We follow the PEP-8 styleguide. There are some tools out there that formats your code PEP-8 conform.
-E.g. for [visual studio code](https://marketplace.visualstudio.com/items?itemName=himanoa.Python-autopep8)
+E.g. for [visual studio code](https://marketplace.visualstudio.com/items?itemName=himanoa.Python-autopep8).
 
 If you work on the tensorflow part of the project also follow these [guidelines](https://danijar.com/structuring-your-tensorflow-models/).
 
@@ -214,6 +216,7 @@ For example, to close an issue numbered 123, you could use the phrase "Closes #1
 or commit message. Once the branch is merged into the default branch, the issue will close.
 
 ### Example
+```
 enh(Readme): Create Readme
 
 To give the people a short overview over the project it should have a Readme.
@@ -223,7 +226,7 @@ Should contain:
 - ....
 
 closes #1
-
+```
 
 This commit is about an enhancement and has the scope Readme. It's not always easy to say which scope the commit has.
 Has the Readme impact just on itsself or global? So choose what you think is best and if the others think different they'll
