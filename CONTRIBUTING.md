@@ -44,6 +44,7 @@ with quickly:
 * **Related Issues** - has a similar issue been reported before?
 * **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
   causing the problem (line of code or commit)
+* **Tag the issue** - tag it with an existing tag or create a matching one
 
 **If you get help, help others. Good karma rulez!**
 
@@ -52,12 +53,15 @@ with quickly:
 Each pull request to the master refers to one issue and closes it.
 Before you submit your pull request consider the following guidelines:
 
+* Name pull request as following:
+- <tag of the ticket>/<__really__ short description waht you'll do>_<nr of ticket it should close>
+- e.g. enh/create_file/method_xy_7
 * Make your changes in a new git branch:
 
     ```shell
     git checkout -b my-fix-branch master
     ```
-
+* Name my-fix-branch following the same rules as pull requests.
 * Create your patch commit, **including appropriate test cases**.
 * Follow our Coding Rules.
 * If the changes affect public APIs, change or add relevant documentation.
@@ -122,11 +126,6 @@ from the main (upstream) repository:
     git branch -D my-fix-branch
     ```
 
-* Update your master with the latest upstream version:
-
-    ```shell
-    git pull --ff upstream master
-```
 
 ## Coding Rules
 
@@ -179,8 +178,8 @@ Must be one of the following:
   generation
 
 ### Scope
-The scope could be anything specifying place of the commit change. For example `$location`,
-`$browser`, `$compile`, `$rootScope`, `ngHref`, `ngClick`, `ngView`, etc...
+The scope could be anything specifying place of the commit change. For example `$models`,
+`$trainers`, `$web`, `$global`, `Readme`, `trainers`, `.gitignore`, etc...
 
 You can use `*` when the change affects more than a single scope.
 
@@ -213,6 +212,23 @@ The following keywords, followed by an issue number, will close the issue:
 
 For example, to close an issue numbered 123, you could use the phrase "Closes #123" or "Closes: #123" in your pull request description
 or commit message. Once the branch is merged into the default branch, the issue will close.
+
+### Example
+enh(Readme): Create Readme
+
+To give the people a short overview over the project it should have a Readme.
+Should contain:
+- Motivation
+- License
+- ....
+
+closes #1
+
+
+This commit is about an enhancement and has the scope Readme. It's not always easy to say which scope the commit has.
+Has the Readme impact just on itsself or global? So choose what you think is best and if the others think different they'll
+correct you.
+The last line says that this commit closes the ticket #1.
 
 ## Writing Documentation
 
