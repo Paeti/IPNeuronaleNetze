@@ -2,19 +2,15 @@
 #So tensorflow, numpy, matlibplot, pip and all the other dependencies are installed
 FROM tensorflow/tensorflow:latest
 
-RUN apt-get update
+RUN apt-get update \
+  && apt-get install \
+     python-opencv \
+     git -y
 
-#Install opencv
-RUN apt-get install python-opencv -y
-
+WORKDIR /
 
 #Deletes the default jupiter notebooks and nn's
-RUN rm *
+RUN rm -rf /notebooks/* \
+  && git clone https://github.com/Paeti/IPNeuronaleNetze /notebooks/IPNeuronaleNetze
 
-#Install git
-RUN apt-get install git -y
-
-#Clone our repo
-RUN git clone https://github.com/Paeti/IPNeuronaleNetze
-
-RUN cd IPNeuronaleNetze
+WORKDIR /notebooks/IPNeuronaleNetze
