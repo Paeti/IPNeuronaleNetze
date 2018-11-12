@@ -1,7 +1,5 @@
 pipeline:
   build:
-    image: ubuntu
+    image: paeti/ipnntensorflow
     commands:
-      - apt update
-      - apt-get install build-essential -y    
       - make ci_test
