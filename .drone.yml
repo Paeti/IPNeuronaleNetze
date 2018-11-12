@@ -2,4 +2,6 @@ pipeline:
   build:
     image: paeti/ipnntensorflow
     commands:
+      - git checkout master
+      - git pull origin
       - make ci_test
