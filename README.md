@@ -34,7 +34,7 @@ Continous integration tool of our choice is drone ci.
 
 ## Contribute
 
-We are happy when you're interested in our project. If you want to contribute read our [contributing guideline](https://github.com/Paeti/IPNeuronaleNetze/blob/master/CONTRIBUTING.md).
+We are happy when you're interested in our project. If you want to contribute read our [contributing guideline](CONTRIBUTING.md).
 
 
 ## Credits
