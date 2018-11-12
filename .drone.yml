@@ -1,7 +1,6 @@
 pipeline:
   build:
-    image: ubuntu
+    image: paeti/ipnntensorflow
     commands:
-      - apt update
-      - apt-get install build-essential -y    
-      - make ci_test
+      - git clone https://github.com/Paeti/IPNeuronaleNetze /notebooks/IPNeuronaleNetze
+      - make -C /notebooks/IPNeuronaleNetze ci_test
