@@ -10,7 +10,6 @@ RUN apt-get update \
 WORKDIR /
 
 #Deletes the default jupiter notebooks and nn's
-RUN rm -rf /notebooks/* \
-  && git clone https://github.com/Paeti/IPNeuronaleNetze /notebooks/IPNeuronaleNetze
+RUN rm -rf /notebooks/*
 
-WORKDIR /notebooks/IPNeuronaleNetze
+WORKDIR /notebooks

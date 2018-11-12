@@ -2,5 +2,5 @@ pipeline:
   build:
     image: paeti/ipnntensorflow
     commands:
-      - git pull origin master
-      - make ci_test
+      - git clone https://github.com/Paeti/IPNeuronaleNetze /notebooks/IPNeuronaleNetze
+      - make -C /notebooks/IPNeuronaleNetze ci_test
