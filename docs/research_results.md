@@ -63,3 +63,17 @@ VGG-16 is good for age and gender recognition, but for further features it might
 ## __*comment on Alex research:*__
 *We use the webcam via the webbrowser, I'm not shure how or if it's possible to detect faces in already saved pictures.*
 *If a member of the image team needs something to research, search for this!*
+
+
+
+<p>
+title: research<br>
+author: Katrin Hammacher<br>
+date: 14.11.2018
+</p>
+[Here](https://www.analyticsvidhya.com/blog/2017/06/hands-on-with-deep-learning-solution-for-age-detection-practice-problem/) you can find some instructions for age detection with deep learning, using python and keras. They also provide an introduction about implementing a [neural network with tensorflow](https://www.analyticsvidhya.com/blog/2016/10/an-introduction-to-implementing-neural-networks-using-tensorflow/) and some further informations about age detection and the applications we want to work with.
+
+On most of the websites I went through (like [this](https://blog.statsbot.co/neural-networks-for-beginners-d99f2235efca) one) they tell you to use a convolutional neural network, for face detection. [Here](https://github.com/mks0601/A-Convolutional-Neural-Network-Cascade-for-Face-Detection) is an example. 
+
+VGG-16 is a suitable [architecture for Large-scale image processing](https://www.jeremyjordan.me/convnet-architectures/) and is named as a very deep convolutional network. You can find an example for a VGG16 model for Keras [here](https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3).
+
