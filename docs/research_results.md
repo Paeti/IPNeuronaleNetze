@@ -22,8 +22,8 @@ If the people are a little bit used to tensorflow and nn's it could be done in h
 I think its essential, because all this papers let assume that plan the training, seperate the datasets, prepare them and train the models will take a lot more time.
 We should talk with Prof. Hartung about using pretrained weights with our planned vgg-16 network.
 The [team](https://www.researchgate.net/publication/283356929_DEX_Deep_EXpectation_of_Apparent_Age_from_a_Single_Image) which used vgg-16 used an model pretrained on the net datasets
-on general classification. This would improve our result enormous, but would take up to 5 weeks on 4 gpu's. Because we don't have the time for that we need to use pretrained weights, choose
-another nn or accept bad result.
+on general classification. This would improve our result enormous because it would take up to 5 weeks on 4 gpu's wthout a pretrained vgg-16 and we don't have the time for that we need to use pretrained weights, choose
+another nn or accept bad results.
 
 Next steps I would choose:
 - __talk to Prof Hartung about using pretrained weights(otherwise search for other fitting net)__
@@ -64,7 +64,9 @@ VGG-16 is good for age and gender recognition, but for further features it might
 *We use the webcam via the webbrowser, I'm not shure how or if it's possible to detect faces in already saved pictures.*
 *If a member of the image team needs something to research, search for this!*
 
-
+## __*comment on comment:*__
+*If you look into the code there is a line which reads an image in from a given path*
+*My solution for this is to save the captured image temporarily on a static path which will be destroyed when the computation and learning is done*
 
 <p>
 title: research<br>
