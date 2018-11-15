@@ -89,3 +89,5 @@ In my opinion we should use vgg 16 to reduce the development time.
 After reading a few search results, i have noticed that other projekts used keras instead of tensorflow. I think vgg 16 is easy portable to tensorflow. But we should talk about that.
 
 But I think its important to know that vgg 16 don't guess the age. So wie must input some layer and train this model for that i think. But its possible that i am wrong.
+
+sorry for my bad english...
