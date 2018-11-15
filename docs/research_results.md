@@ -78,3 +78,14 @@ On most of the websites I went through (like [this](https://blog.statsbot.co/neu
 
 VGG-16 is a suitable [architecture for Large-scale image processing](https://www.jeremyjordan.me/convnet-architectures) and is named as a very deep convolutional network. You can find an example for a VGG16 model for Keras [here](https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3).
 
+<p>
+title: Ronny Notizen<br>
+author: Ronny Aretz<br>
+date: 15.11.18
+</p>
+
+In my opinion we should use vgg 16 to reduce the development time.
+
+After reading a few search results, i have noticed that other projekts used keras instead of tensorflow. I think vgg 16 is easy portable to tensorflow. But we should talk about that.
+
+But I think its important to know that vgg 16 don't guess the age. So wie must input some layer and train this model for that i think. But its possible that i am wrong.
