@@ -22,3 +22,8 @@ test, development/validation and training set. The reason having one more set is
 performance neuronal network. The training algorithms are getting trained training 
 set. To find out with algorithm performs best we let them run over the dev/val set. The final 
 algorithm can be tested on the test set.
+
+More Links:
+https://www.coursera.org/lecture/deep-neural-network/train-dev-test-sets-cxG1s
+https://developers.google.com/machine-learning/crash-course/training-and-test-sets/splitting-data
+
