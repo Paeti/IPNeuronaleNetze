@@ -26,3 +26,18 @@ algorithm can be tested on the test set.
 More Links:
 https://www.coursera.org/lecture/deep-neural-network/train-dev-test-sets-cxG1s
 https://developers.google.com/machine-learning/crash-course/training-and-test-sets/splitting-data
+
+
+<p>
+title: research<br>
+author: Ronny Aretz<br>
+date: 20.11.18
+</p>
+
+I think a split into three pieces is good choice. But we have to discuss how many pieces we should use for the Cross Validation. Too many could take too much time for testing.
+
+Cross Validation plus Grid Search is a good combination to get the best Score.
+
+After my research about NN and reading some of your search results i think we should talk about „Regression and Classification“. In my opinion we should use Regression to predict the age of a person.
+
+Sorry for my horrible English.
