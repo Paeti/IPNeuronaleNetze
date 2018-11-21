@@ -1,0 +1,166 @@
+ #NeuronalNetworks
+
+ Image Classification
+The Image Classification problem is the task of assigning an input image to one label from a fixed set of categories.
+
+To do so there are some *problems* to face:
+
+ Viewpoint variation
+
+ Scale variation
+
+ deformation
+
+ occlusion
+
+ illumination conditions
+
+ background clutter
+
+ intra-class variation
+
+To classify an image we need to get a lot of labeled images, because we cant go the traditional way, where we have an ultimate dataset. Every dog-image looks different, so we provide the computer with many examples of each class and then we will develop learning algorithms that look at these examples and learn about the visual appearance of each class.
+
+To get from an Image (array of pixels) to a label (one value) there has to be a pipeline:
+
+ *input* 
+ the input consists of a set of images with different classes (::training set::)
+
+ *learning* 
+ the training set will be used to learn how the classes look like (::training a classifier or learning a model::)
+
+ *evaluation* 
+ After the training we try to predict labels for a new set of images that it has never seen before. We will then compare the true labels of these images to the ones predicted by the classifier.
+
+
+ Nearest Neighbor Classifier
+We got a lot of images as the train set which are labeled with one of some classes. After we trained our system we compare the test set with the pretrained images and can predict the first label of the closest training image.
+This will be done by *comparing the images pixel by pixel and add up all the differences*.
+```
+class NearestNeighbor(object):
+    def __init__(self):
+        pass
+
+    def train(self, X, y):
+        self.Xtr = X
+        self.ytr = y
+
+    def predict(self, X):
+        num_test = X.shape[0]
+        Ypred = np.zeros(num_test, dtype=self.ytr.dtype)
+        for i in xrange(num_test):
+            distances = np.sum(np.abs(self.Xtr - 	         
+							 X[i, :]), axis=1)
+            min_index = np.argmin(distances)
+            Ypred[i] = self.ytr[min_index]
+        return Ypred
+
+
+Xtr, Ytr, Xte, Yte = load_CIFAR10('data/cifar10/')
+Xtr_rows = Xtr.reshape(Xtr.shape[0], 32 * 32 * 3)
+Xte_rows = Xte.reshape(Xte.shape[0], 32 * 32 * 3)
+nn = NearestNeighbor()
+nn.train(Xtr_rows, Ytr)
+Yte_predict = nn.predict(Xte_rows) 
+print("accuracy:" + (np.mean(Yte_predict == Yte)))
+```
+
+If you ran this code, you would see that this classifier only achieves 38,6% on CIFAR-10 (L1).
+
+Another option is to square the difference of the values, add them up and take the square root out of it. This would achieve an accuracy of 35.4% (L2).
+
+
+ k - Nearest Neighbor Classifier
+Instead of finding the single closest image in the training set, we will find the top ::k:: closest images and have them vote on the label of the test image.
+
+
+ Validation sets for Hyperparameter tuning
+The k-nearest neighbor classifier requires a setting for k. The choices (distance functions like L1 or L2) are called hyperparameters.
+
+::Evaluate on the test set only a single time, at the very end.::
+
+To tune the hyper-parameter it is a well known practice to use a *validation set*. This can be achieved when you split the training set in two: a slightly smaller training set and the validation set.
+
+
+ Pros and Cons of Nearest Neighbor classifier
+Pros:
+
+ easy to implement
+
+ easy to understand
+
+ needs no time to train
+Cons:
+
+ a lot computational cost at test time because it has to compare all images of the training set
+
+ not efficient in test time (especially in space)
+
+
+ Linear Classification
+This approach will have two major components:
+
+ *score function* 
+ this will map the raw data to class scores
+
+ *loss function* 
+ quantifies the agreement between the predicted scores and the ground truth labels.
+This powerful approach for image classification can be naturally extend to entire Neural Networks and Convolutional Neural Networks.
+
+
+ Parameterized mapping from images to label scores
+The first component of this approach is to define the score function that maps the pixel values of an image to confidence scores for each class.
+
+*linear classifier* 
+ f(xi,W,b) = Wxi+b 
+
+ xi = 3072 x 1 
+ 32 x 32 x 3 = 3072 
+ vector
+
+ W = 10 x 3072 
+ 10 because ten classifier 
+ matrix
+
+ b = 10 x 1 
+ vector
+
+The parameters in *W* are often called *weights* and *b* is called the *bias vector* because it influences the output scores without interacting with the actual data xi.
+
+There are a few things to note:
+
+ The single matrix multiplication *Wxi* is effectively evaluating 10 separate classifiers in parallel
+
+ The only thing we can tweak are the parameters *W,b*. The goal will be to set these in such way that the computed scores match the ground truth labels across the whole training set.
+
+ After the learning in finished, we don't longer need the training set. That is because a new test image can be simply forwarded through the function a classified based on the computed scores.
+
+ To classify an image it only involves a single matrix multiplication and addition, which is significantly faster than comparing a test image to all training images.
+
+
+ Interpreting a linear classifier
+A linear classifier computes the score of a class as wighted sum of all of its pixel values across all 3 of its color channels. Depending on precisely what values we set for these weights, the function has the capacity to like or dislike /depending on the sign of each weight) certain colours at certain positions in the image.
+
+ Images a high-dimensional points
+Every row of *W* is a classifier for one of the classes. The biases *b* allows our classifier to translate the lines. Without it the lines would be forced to cross the origin when plugging in *xi = 0*
+
+ Linear classifiers as template matching
+After the learning is finished each row of *W* corresponds to a template for one of the classes. The score of each class for an image is then obtained by comparing each template with the image using an inner product on by one to find the one that “fits” best.
+
+
+ Loss function
+The loss function will be high if we are doing a poor ob of classifying the training data and it will be low if we are doing well.
+The sense about this is, that we can measure how consistent the predictions on training data are with the ground truth labels. Additionally, making good predictions on the training set is equivalent to minimizing the loss.
+
+ Multiclass Support Vector Machine loss
+The SVM loss is set up so that the SVM “wants” the correct class for each image to have a higher score than the incorrect classes by some fixed margin.  It wants the score of the correct class to be larger than the incorrect class scores by at least by delta(margin). If this is not the case, we will accumulate loss.
+
+ Softmax classifier
+Unlike the SVM which treats the outputs as scores for each class, the Softmax classifier gives a slightly more intuitive output and also has a probabilistic interpretation. 
+The function mapping stays unchanged, but we now interpret these scores as the unnormalized log probabilities for each class and replace the hinge loss with a cross-entropy loss.÷
+
+
+
+
+
+
