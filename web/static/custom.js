@@ -3,16 +3,18 @@ const canvas = document.getElementById('canvas');
 const user = document.getElementById('userForm');
 const loader = document.getElementById('heartLoader');
 const context = canvas.getContext('2d');
-const biggerText = document.getElementById('issaBiggerText')
-const smallerText = document.getElementById('issaSmallerText')
+const biggerText = document.getElementById('issaBiggerText');
+const smallerText = document.getElementById('issaSmallerText');
 const constraints = {
   video: true,
 };
+
 //Enables webcam
 navigator.mediaDevices.getUserMedia(constraints)
   .then((stream) => {
     webcam.srcObject = stream;
   });
+
 
 // Checks if "^" Key is pressed
 document.addEventListener("keydown", function (e) {
@@ -30,13 +32,13 @@ document.addEventListener("keydown", function (e) {
     smallerText.style.opacity = 0;
     smallerText.style.transitionDuration = "1s";
     crypticWow("Ihr Bild wird nun verarbeitet");
-  } else if (e.keyCode == 70) {
+  } else if (e.keyCode == 77) {
     crypticWow("Sie sind 54 Jahre alt und weiblich");
-    smallerText.innerHTML = "korrigieren Sie ihre Schätzung und drücken Sie dann auf das Herz"
+      smallerText.innerHTML = "korrigieren Sie ihre Schätzung und drücken Sie dann auf das Herz";
     smallerText.style.transitionDelay = "1s";
     smallerText.style.opacity = 1;
     smallerText.style.transitionDuration = "2s";
-  
+
   }
 }, false);
 
@@ -45,11 +47,11 @@ function send(canvas) {
   $.ajax({
     type: "POST",
     url: "", //TODO: insert filename which gets the image via post
-    data: { 
+    data: {
        imgBase64: dataURL
     }
   }).done(function(o) {
-    console.log('saved'); 
+    console.log('saved');
   });
 }
 
@@ -91,4 +93,3 @@ function toggleFullScreen() {
     }
   }
 }
-
