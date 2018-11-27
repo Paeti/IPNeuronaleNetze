@@ -10,8 +10,10 @@ class AskNN(Resource):
 
 class LoadPage(Resource):
     def get(self):
-        pass
+        return make_response(render_template('index.html'),200,headers)
 
 
-api.add_resource(UserAPI, '/', endpoint = 'index')
-api.add_resource(UserAPI, '/app', endpoint = 'app')
+api.add_resource(LoadPage, '/', endpoint = 'index')
+api.add_resource(AskNN, '/predict', endpoint = 'predict')
+
+app.run(debug = True)
