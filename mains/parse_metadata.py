@@ -1,6 +1,7 @@
 import sys
 import cv2 as cv
 from datetime import datetime, timedelta
+from sklearn.model_selection import train_test_split
 
 print("-> Starting read of metadata file")
 with open('metadata.csv', 'r') as file:
@@ -50,13 +51,14 @@ for idx, val in enumerate(full_path):
                   "gender": gender[idx], "photo_taken": datetime.strptime(photo_taken[idx], "%Y"),
                   "face_location": face_location[idx]}
         I[val]["age"] = -1
-    I[val]["img"] = cv.imread("imdb_crop" + "/" + val)
+#changing path to imdb file !!
+    I[val]["img"] = cv.imread("imdb" + "/" + val)
     try:
         I[val]["img"] = cv.resize(I[val]["img"], (224, 224))
     except:
         del I[val]
 
-print(I["01/nm0000001_rm124825600_1899-5-10_1968.jpg"])
+#print(I["01/nm0000001_rm124825600_1899-5-10_1968.jpg"])
 
 print("-> data array creating completed, flushing into training ready dataset")
 
@@ -69,3 +71,30 @@ for k, v in I.items():
         v["gender"]
     ))
 print("-> training set ready for splitting")
+
+
+#size_training = 300000/len(I)
+#size_test = 10000/len(I)
+
+size_training = 300000/len(I)
+
+'''
+    X_train = images für trainingset
+    Y_train = labels für trainingset
+    X_val = images für validationset
+    Y_val = labels für validationset
+    X_test = images für testset
+    Y_test = labels für testset
+'''
+#shuffle default = true
+#stratify default = none --> nicht schichtenweise
+X_train, X_tmp, Y_train, Y_tmp = train_test_split(
+    X, Y, train_size=size_training, random_state=1
+)
+
+size_val = 90000/len(X_tmp)
+
+X_val, X_test, Y_val, Y_test = train_test_split(
+    X_tmp, Y_tmp, train_size=size_val, random_state=1
+)
+
