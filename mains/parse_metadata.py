@@ -51,6 +51,8 @@ for idx, val in enumerate(full_path):
                   "face_location": face_location[idx]}
         I[val]["age"] = -1
     I[val]["img"] = cv.imread("imdb_crop" + "/" + val)
+    I[val]["img"] = cv.resize(I[val]["img"], (224, 224))
+    #TODO check if color correcting does something
 
 print(I["01/nm0000001_rm124825600_1899-5-10_1968.jpg"])
 
