@@ -18,7 +18,7 @@ class Model:
     # Ich habe die python implementation von vgg 16 genommen und
     # bis auf die Aktivierungsfunktinen nichts geändert
     #**
-    def build_model(input_shape=(3,224,224),klassen=100):
+    def build_model(input_shape=(224,224,3),klassen=100):
         model = Sequential()
         model.add(ZeroPadding2D((1,1),input_shape))
         #**
