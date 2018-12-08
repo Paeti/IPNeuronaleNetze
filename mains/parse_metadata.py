@@ -1,5 +1,7 @@
 import sys
 import cv2 as cv
+import tensorflow as tf
+import numpy as np
 from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
 
@@ -98,3 +100,34 @@ X_val, X_test, Y_val, Y_test = train_test_split(
     X_tmp, Y_tmp, train_size=size_val, random_state=1
 )
 
+#load images
+def load_image(addr):
+    img = cv.imread(addr)
+    #img = cv.resize(img, (224, 224), interpolation=cv.INTER_CUBIC)
+    img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    img = img.astype(np.float32)
+    return img
+
+
+#convert data to features
+def _int64_feature(value):
+    return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
+
+def _bytes_feature(value):
+    return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+
+
+#write data in tfrecords file
+train_filename = 'train.tfrecords'
+writer = tf.python_io.TFRecordWriter(train_filename)
+
+for i in range(len(X_train)):
+    img = load_image(X_train[i])
+    label = Y_train[i]
+
+    feature = {'train/label': _int64_feature(label),
+               'train/image': _bytes_feature(tf.compat.as_bytes(img.tostring()))}
+
+    example = tf.train.Example(features=tf.train.Features(feature=feature))
+    writer.write(example.SerializeToString())
+writer.close()
