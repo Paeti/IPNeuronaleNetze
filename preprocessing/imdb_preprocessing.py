@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
 
 print("-> Starting read of metadata file")
-with open('metadata.csv', 'r') as file:
+with open('imdb_metadata.csv', 'r') as file:
     lines = [line.rstrip('\n') for line in file]
     # dob, full_path, gender, photo_taken, face_location
     dob = lines[0]
@@ -54,7 +54,7 @@ for idx, val in enumerate(full_path):
                   "face_location": face_location[idx]}
         I[val]["age"] = -1
 #changing path to imdb file !!
-    I[val]["img"] = cv.imread("imdb" + "/" + val)
+    I[val]["img"] = cv.imread("imdb_ex" + "/" + val)
     try:
         I[val]["img"] = cv.resize(I[val]["img"], (224, 224))
     except:
@@ -65,44 +65,50 @@ for idx, val in enumerate(full_path):
 print("-> data array creating completed, flushing into training ready dataset")
 
 X = []
-Y = []
+Y_age = []
+Y_gender = []
 for k, v in I.items():
     X.append(v["img"])
-    Y.append((
-        v["age"],
+    Y_age.append(
+        v["age"]
+    )
+    Y_gender.append(
         v["gender"]
-    ))
+    )
 print("-> training set ready for splitting")
 
 
-#size_training = 300000/len(I)
-#size_test = 10000/len(I)
-
+#number of images for trainingset
 size_training = 300000/len(I)
 
 '''
-    X_train = images für trainingset
-    Y_train = labels für trainingset
-    X_val = images für validationset
-    Y_val = labels für validationset
-    X_test = images für testset
-    Y_test = labels für testset
+    X_train = images for trainingset
+    Y_age_train = age-labels for trainingset
+    Y_gender_train = gender-labels for trainingset
+    X_val = images for validationset
+    Y_age_val = age-labels for validationset
+    Y_gender_val = gender-labels for validationset
+    X_test = images for testset
+    Y_age_test = age-labels for testset
+    Y_gender_test = gender-labels for testset
 '''
 #shuffle default = true
 #stratify default = none --> nicht schichtenweise
-X_train, X_tmp, Y_train, Y_tmp = train_test_split(
-    X, Y, train_size=size_training, random_state=1
+X_train, X_tmp, Y_age_train, Y_age_tmp, Y_gender_train, Y_gender_tmp = train_test_split(
+    X, Y_age, Y_gender, train_size=size_training, random_state=1
 )
 
+#number of images for validationset
 size_val = 90000/len(X_tmp)
 
-X_val, X_test, Y_val, Y_test = train_test_split(
-    X_tmp, Y_tmp, train_size=size_val, random_state=1
+X_val, X_test, Y_age_val, Y_age_test, Y_gender_val, Y_gender_test = train_test_split(
+    X_tmp, Y_age_tmp, Y_gender_tmp, train_size=size_val, random_state=1
 )
 
+print("-> dataset splitted")
+
 #load images
-def load_image(addr):
-    img = cv.imread(addr)
+def load_image(img):
     #img = cv.resize(img, (224, 224), interpolation=cv.INTER_CUBIC)
     img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     img = img.astype(np.float32)
@@ -118,12 +124,25 @@ def _bytes_feature(value):
 
 
 #write data in tfrecords file
-train_filename = 'train.tfrecords'
-writer = tf.python_io.TFRecordWriter(train_filename)
+train_filename1 = 'trainset for age.tfrecords'
+train_filename2 = 'trainset for gender.tfrecords'
+validation_filename1 = 'validationset for age.tfrecords'
+validation_filename2 = 'validationset for gender.tfrecords'
+test_filename1 = 'testset for age.tfrecords'
+test_filename2 = 'testset for gender.tfrecords'
+
+writer = tf.python_io.TFRecordWriter(train_filename1)
 
 for i in range(len(X_train)):
     img = load_image(X_train[i])
-    label = Y_train[i]
+
+    '''
+    choose the right label you want to train on    
+    '''
+
+    label = Y_age_train[i]
+
+    label = int(label)
 
     feature = {'train/label': _int64_feature(label),
                'train/image': _bytes_feature(tf.compat.as_bytes(img.tostring()))}
@@ -131,3 +150,5 @@ for i in range(len(X_train)):
     example = tf.train.Example(features=tf.train.Features(feature=feature))
     writer.write(example.SerializeToString())
 writer.close()
+
+print("-> created and wrote trfrecords file for selected dataset")
