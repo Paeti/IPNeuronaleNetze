@@ -6,8 +6,9 @@ from keras import layers
 from keras import optimizers
  class Model:
     def __init__(self, config):
-        self.fit_model()
         self.build_model()
+        self.fit_model()
+        self.init_saver()
 
     def build_model(input_shape=(3, 224, 224), classes=2):
         model = Sequential()
@@ -50,9 +51,10 @@ from keras import optimizers
         model.add(Dropout(0.5))
         model.add(Dense(classes, activation='softmax'))
         return model
+        pass
+
      def fit_model(self, dataset, cv = 10):
         image_size = 224
-
          # Training and Validation
         train_datagen = ImageDataGenerator(
             rescale=1./255,
@@ -94,9 +96,6 @@ from keras import optimizers
             validation_steps=validation_generator.samples/validation_generator.batch_size,
             verbose=1)
         
-        # Save the model
-        model.save('gender_model.h5')
-        # Plot training and validation data
         acc = history.history['acc']
         val_acc = history.history['val_acc']
         loss = history.history['loss']
@@ -115,3 +114,9 @@ from keras import optimizers
         plt.title('Training and validation loss')
         plt.legend()
         plt.show()
+        pass
+    
+    def init_saver():
+        model.save('gender_model.h5')
+        pass
+        
