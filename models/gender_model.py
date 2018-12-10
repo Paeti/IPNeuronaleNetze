@@ -8,14 +8,25 @@ from keras import optimizers
 
 class Model:
     def __init__(self, config):
-        self.build_model()
-        self.fit_model()
-        self.init_saver()
+        self.main_model()
+
+    def main_model(self, dataset, cv=10):
+        image, label = create_dataset(FILEPATH)
+
+        train_model = build_model()
+
+        train_model.compile(optimizer=keras.optimizers.RMSprop(lr=0.0001),
+                            loss='mean_squared_error',
+                            metrics=[soft_acc],
+                            target_tensors=[label])
+
+        train_model.fit(epochs=EPOCHS,
+                        steps_per_epoch=STEPS_PER_EPOC)
+
 
     def build_model(input_shape=(3, 224, 224), classes=2):
         model = Sequential()
         model.add(ZeroPadding2D((1, 1), input_shape))
-
         model.add(Convolution2D(64, 3, 3, LeakyReLU(alpha=0.3)))
         model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(64, 3, 3, LeakyReLU(alpha=0.3)))
@@ -53,71 +64,29 @@ class Model:
         model.add(Dropout(0.5))
         model.add(Dense(classes, activation='softmax'))
         return model
-        pass
 
-    def fit_model(self, dataset, cv=10):
-        image_size = 224
-        # Training and Validation
-        train_datagen = ImageDataGenerator(
-            rescale=1./255,
-            rotation_range=20,
-            width_shift_range=0.2,
-            height_shift_range=0.2,
-            horizontal_flip=True,
-            fill_mode='nearest')
-        validation_datagen = ImageDataGenerator(rescale=1./255)
+    def create_dataset(filepath):
+        dataset = tf.data.TFRecordDataset(filepath)
+        dataset = dataset.map(_parse_function, num_parallel_calls=8)
+        dataset = dataset.repeat()
+        dataset = dataset.shuffle(SHUFFLE_BUFFER)
+        dataset = dataset.batch(BATCH_SIZE)
+        iterator = dataset.make_one_shot_iterator()
+        image, label = iterator.get_next()
+        image = tf.reshape(image, [-1, 224, 224, 1])
+        label = tf.one_hot(label, NUM_CLASSES)
+        return image, label
 
-        # Change the batchsize according to your system RAM
-        train_batchsize = 100
-        val_batchsize = 10
-
-        train_generator = train_datagen.flow_from_directory(
-            directory=r"C:\Users\ckrem\Desktop\IP\Data\Train",
-            target_size=(image_size, image_size),
-            batch_size=train_batchsize,
-            class_mode='categorical')
-
-        validation_generator = validation_datagen.flow_from_directory(
-            directory=r"C:\Users\ckrem\Desktop\IP\Data\Valid",
-            target_size=(image_size, image_size),
-            batch_size=val_batchsize,
-            class_mode='categorical',
-            shuffle=False)
-        # Compile the model
-        model = self.build_model()
-        model.compile(loss='categorical_crossentropy',
-                      optimizer=optimizers.RMSprop(lr=1e-4),
-                      metrics=['acc'])
-        # Train the model
-        # generator is used when you want to avoid duplicate data when using multiprocessing. This is for practical purpose, when you have large dataset.
-        history = model.fit_generator(
-            train_generator,
-            steps_per_epoch=train_generator.samples/train_generator.batch_size,
-            epochs=30,
-            validation_data=validation_generator,
-            validation_steps=validation_generator.samples/validation_generator.batch_size,
-            verbose=1)
-
-        acc = history.history['acc']
-        val_acc = history.history['val_acc']
-        loss = history.history['loss']
-        val_loss = history.history['val_loss']
-
-        epochs = range(len(acc))
-
-        plt.plot(epochs, acc, 'b', label='Training acc')
-        plt.plot(epochs, val_acc, 'r', label='Validation acc')
-        plt.title('Training and validation accuracy')
-        plt.legend()
-
-        plt.figure()
-        plt.plot(epochs, loss, 'b', label='Training loss')
-        plt.plot(epochs, val_loss, 'r', label='Validation loss')
-        plt.title('Training and validation loss')
-        plt.legend()
-        plt.show()
-        pass
+    def _parse_function(proto):
+        # define your tfrecord again. Remember that you saved your image as a string.
+        keys_to_features = {'image': tf.FixedLenFeature([], tf.string),
+                            "label": tf.FixedLenFeature([], tf.int64)}
+        # Load one example
+        parsed_features = tf.parse_single_example(proto, keys_to_features)
+        # Turn your saved image string into an array
+        parsed_features['image'] = tf.decode_raw(
+            parsed_features['image'], tf.uint8)
+        return parsed_features['image'], parsed_features["label"]
 
     def init_saver():
         model.save('gender_model.h5')
-        pass
