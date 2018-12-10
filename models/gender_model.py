@@ -1,84 +1,125 @@
-import numpy as np
-import keras as ke
-from keras import backend as K
-from keras.models import Sequential, Model
-from keras.layers import Activation, Input, Flatten, Dense
-from keras.layers.core import Dense, Flatten
-from keras.optimizers import Adam
-from keras.metrics import categorical_crossentropy
+from keras.applications import VGG16
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers.normalization import BatchNormalization
-from keras.layers.convolutional import *
-from matplotlib import pyplot as plt
-from sklearn.metrics import confusion_matrix
-import itertools
 import matplotlib.pyplot as plt
-
-
-# Absolut paths have to get adjusted
-train_path = '/Users/max/Documents/Proggerzeugs/PYTHONworkspace/ageEstimation/Age_Estimation/train'
-valid_path = '/Users/max/Documents/Proggerzeugs/PYTHONworkspace/ageEstimation/Age_Estimation/valid'
-test_path = '/Users/max/Documents/Proggerzeugs/PYTHONworkspace/ageEstimation/Age_Estimation/test'
-
-# Batch sizes have to get adjusted
-train_batches = ImageDataGenerator().flow_from_directory(
-    train_path, target_size=(224, 224), classes=['man', 'woman'], batch_size=6)
-valid_batches = ImageDataGenerator().flow_from_directory(
-    valid_path, target_size=(224, 224), classes=['man', 'woman'], batch_size=6)
-test_batches = ImageDataGenerator().flow_from_directory(
-    test_path, target_size=(224, 224), classes=['man', 'woman'], batch_size=6)
-
-# Plot images
-
-
-def plots(ims, figsize=(12, 6), rows=1, interp=False, titles=None):
-    if type(ims[0]) is np.ndarray:
-        ims = np.array(ims).astype(np.uint8)
-        if (ims.shape[-1] != 3):
-            ims = ims.transpose((0, 2, 3, 1))
-    f = plt.figure(figsize=figsize)
-    cols = len(ims)//rows if len(ims) % 2 == 0 else len(ims)//rows + 1
-    for i in range(len(ims)):
-        sp = f.add_subplot(rows, cols, i+1)
-        sp.axis('Off')
-        if titles is not None:
-            sp.set_title(titles[i], fontsize=16)
-        plt.imshow(ims[i], interpolation=None if interp else 'none')
-
-    imgs, labels = next(train_batches)
-
-
-# Get Lables
-plots(imgs, titles=labels)
-
-vgg16_model = ke.applications.VGG16(weights='imagenet', include_top=False)
-
-
-inputS = Input(shape=(224, 224, 3), name='image_input')
-
-output_vgg16_model = vgg16_model(inputS)
-
-x = Flatten(name='flatten')(output_vgg16_model)
-x = Dense(4096, activation='relu', name='fc1')(x)
-x = Dense(4096, activation='relu', name='fc2')(x)
-x = Dense(2, activation='softmax', name='predictions')(x)
-
-my_model = Model(inputs=inputS, outputs=x)
-
-for layer in my_model.layers:
-    layer.trainable = False
-
-# Here we have to decide, how many layers we want to leave trainable:
-# For the beginning we can test with 0 trainable layers, so comment the
-# following two lines out for the first test
-for layer in my_model.layers[-1:]:
-    layer.trainable = True
-
-my_model.compile(
-    Adam(lr=.0001), loss='categorical_crossentropy', metrics=['accuracy'])
-
-my_model.summary()
-
-# 30 images in the trian folder and a batch size of 6, leads to a step_per_epoch number of 5, 5*6=30
-my_model.fit_generator(train_batches, steps_per_epoch=5,
-                       validation_data=valid_batches, validation_steps=5, epochs=5, verbose=2)
+from keras import models
+from keras import layers
+from keras import optimizers
+ class Model:
+    def __init__(self, config):
+        self.fit_model()
+        self.build_model()
+     # Load the VGG model
+    #**
+    # Ich habe die python implementation von vgg 16 genommen und
+    # bis auf die Aktivierungsfunktinen nichts geändert
+    #**
+    def build_model(input_shape=(3,224,224),klassen=100):
+        model = Sequential()
+        model.add(ZeroPadding2D((1,1),input_shape))
+        #**
+        # Ich habe mich für die Aktivierungsfunktion LeakyRelu (vorher einfache Relu)
+        # entschieden um dem Problem des "dying relu" zu umgehen.
+        # Im grunde optimiert die LeakyRelu nur das gradienten verfahren welches
+        # zur Fehlerminimierung genutzt wird.
+        # Genaueres siehe: https://www.quora.com/What-are-the-advantages-of-using-Leaky-Rectified-Linear-Units-Leaky-ReLU-over-normal-ReLU-in-deep-learning
+        #**
+        model.add(Convolution2D(64, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(64, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(MaxPooling2D((2,2), strides=(2,2)))
+         model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(128, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(128, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(MaxPooling2D((2,2), strides=(2,2)))
+         model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(256, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(256, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(256, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(MaxPooling2D((2,2), strides=(2,2)))
+         model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(MaxPooling2D((2,2), strides=(2,2)))
+         model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(ZeroPadding2D((1,1)))
+        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
+        model.add(MaxPooling2D((2,2), strides=(2,2)))
+         model.add(Flatten())
+        model.add(Dense(4096, LeakyReLU(alpha=0.3)))
+        model.add(Dropout(0.5))
+        model.add(Dense(4096, LeakyReLU(alpha=0.3)))
+        model.add(Dropout(0.5))
+        model.add(Dense(klassen, activation='softmax'))
+        return model
+     def fit_model(self, dataset, cv = 10):
+        image_size = 224
+         # Training and Validation
+        train_datagen = ImageDataGenerator(
+            rescale=1./255,
+            rotation_range=20,
+            width_shift_range=0.2,
+            height_shift_range=0.2,
+            horizontal_flip=True,
+            fill_mode='nearest')
+         validation_datagen = ImageDataGenerator(rescale=1./255)
+             # Change the batchsize according to your system RAM
+        train_batchsize = 100
+        val_batchsize = 10
+            
+        train_generator = train_datagen.flow_from_directory(
+            directory= r"C:\Users\ckrem\Desktop\IP\Data\Train" ,
+            target_size=(image_size, image_size),
+            batch_size=train_batchsize,
+            class_mode='categorical')
+        
+        validation_generator = validation_datagen.flow_from_directory(
+            directory= r"C:\Users\ckrem\Desktop\IP\Data\Valid",
+            target_size=(image_size, image_size),
+            batch_size=val_batchsize,
+            class_mode='categorical',
+            shuffle=False)
+         # Compile the model
+        model = self.build_model()
+        model.compile(loss='categorical_crossentropy',
+                    optimizer=optimizers.RMSprop(lr=1e-4),
+                    metrics=['acc'])
+        # Train the model
+        # generator is used when you want to avoid duplicate data when using multiprocessing. This is for practical purpose, when you have large dataset.
+        history = model.fit_generator(
+            train_generator,
+            steps_per_epoch=train_generator.samples/train_generator.batch_size ,
+            epochs=30,
+            validation_data=validation_generator,
+            validation_steps=validation_generator.samples/validation_generator.batch_size,
+            verbose=1)
+        
+        # Save the model
+        model.save('age_model.h5')
+        # Plot training and validation data
+        acc = history.history['acc']
+        val_acc = history.history['val_acc']
+        loss = history.history['loss']
+        val_loss = history.history['val_loss']
+        
+        epochs = range(len(acc))
+        
+        plt.plot(epochs, acc, 'b', label='Training acc')
+        plt.plot(epochs, val_acc, 'r', label='Validation acc')
+        plt.title('Training and validation accuracy')
+        plt.legend()
+        
+        plt.figure()
+        plt.plot(epochs, loss, 'b', label='Training loss')
+        plt.plot(epochs, val_loss, 'r', label='Validation loss')
+        plt.title('Training and validation loss')
+        plt.legend()
+        plt.show()

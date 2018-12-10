@@ -1,10 +1,10 @@
 import tensorflow as tf
 
-from keras.models import Sequential
-from keras.layers.core import Flatten,Dense,Dropout
-from keras.layers.advanced_activations import LeakyReLU
-from keras.activations import relu
-from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers.core import Flatten,Dense,Dropout
+from tensorflow.python.keras.layers.advanced_activations import LeakyReLU
+from tensorflow.python.keras.activations import relu
+from tensorflow.python.keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
 
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.linear_model import Lasso
