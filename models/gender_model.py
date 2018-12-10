@@ -14,7 +14,7 @@ class Model:
         #STEPS_PER_EPOCH= SUM_OF_ALL_DATASAMPLES / BATCHSIZE
         image, label = create_dataset(filepath)
 
-        train_model = build_model()
+        train_model = build_model((224, 224, 3),classes)
 
         train_model.compile(optimizer=keras.optimizers.RMSprop(lr=0.0001),
                             loss='mean_squared_error',
@@ -25,7 +25,7 @@ class Model:
                         steps_per_epoch=STEPS_PER_EPOC)
         init_saver(train_model)
 
-    def build_model(input_shape=(3, 224, 224), classes=2):
+    def build_model(input_shape, classes):
         model = Sequential()
         model.add(ZeroPadding2D((1, 1), input_shape))
         model.add(Convolution2D(64, 3, 3, LeakyReLU(alpha=0.3)))
