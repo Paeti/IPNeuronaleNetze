@@ -7,10 +7,11 @@ from keras import optimizers
 
 
 class Model:
-    def __init__(self):
+    def __init__(self, ):
         self.main_model()
 
     def main_model(filepath, classes):
+        #STEPS_PER_EPOCH= SUM_OF_ALL_DATASAMPLES / BATCHSIZE
         image, label = create_dataset(filepath)
 
         train_model = build_model()
@@ -23,7 +24,6 @@ class Model:
         train_model.fit(epochs=EPOCHS,
                         steps_per_epoch=STEPS_PER_EPOC)
         init_saver(train_model)
-
 
     def build_model(input_shape=(3, 224, 224), classes=2):
         model = Sequential()
