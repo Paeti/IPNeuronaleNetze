@@ -7,11 +7,11 @@ from keras import optimizers
 
 
 class Model:
-    def __init__(self, config):
+    def __init__(self):
         self.main_model()
 
-    def main_model(self, dataset, cv=10):
-        image, label = create_dataset(FILEPATH)
+    def main_model(filepath, classes):
+        image, label = create_dataset(filepath)
 
         train_model = build_model()
 
@@ -22,6 +22,7 @@ class Model:
 
         train_model.fit(epochs=EPOCHS,
                         steps_per_epoch=STEPS_PER_EPOC)
+        init_saver(train_model)
 
 
     def build_model(input_shape=(3, 224, 224), classes=2):
@@ -88,5 +89,5 @@ class Model:
             parsed_features['image'], tf.uint8)
         return parsed_features['image'], parsed_features["label"]
 
-    def init_saver():
+    def init_saver(model):
         model.save('gender_model.h5')
