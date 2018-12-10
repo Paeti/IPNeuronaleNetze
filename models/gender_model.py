@@ -7,8 +7,8 @@ from keras import optimizers
 
 
 class Model:
-    def __init__(self, ):
-        self.main_model()
+    def __init__(self, filepath, classes):
+        self.main_model(filepath, classes)
 
     def main_model(filepath, classes):
         #STEPS_PER_EPOCH= SUM_OF_ALL_DATASAMPLES / BATCHSIZE
