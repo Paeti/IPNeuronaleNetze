@@ -8,60 +8,51 @@ from keras import optimizers
     def __init__(self, config):
         self.fit_model()
         self.build_model()
-     # Load the VGG model
-    #**
-    # Ich habe die python implementation von vgg 16 genommen und
-    # bis auf die Aktivierungsfunktinen nichts geändert
-    #**
-    def build_model(input_shape=(3,224,224),klassen=100):
+
+    def build_model(input_shape=(3, 224, 224), classes=2):
         model = Sequential()
-        model.add(ZeroPadding2D((1,1),input_shape))
-        #**
-        # Ich habe mich für die Aktivierungsfunktion LeakyRelu (vorher einfache Relu)
-        # entschieden um dem Problem des "dying relu" zu umgehen.
-        # Im grunde optimiert die LeakyRelu nur das gradienten verfahren welches
-        # zur Fehlerminimierung genutzt wird.
-        # Genaueres siehe: https://www.quora.com/What-are-the-advantages-of-using-Leaky-Rectified-Linear-Units-Leaky-ReLU-over-normal-ReLU-in-deep-learning
-        #**
+        model.add(ZeroPadding2D((1, 1), input_shape))
+
         model.add(Convolution2D(64, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
+        model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(64, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(MaxPooling2D((2,2), strides=(2,2)))
-         model.add(ZeroPadding2D((1,1)))
+        model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+         model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(128, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
+        model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(128, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(MaxPooling2D((2,2), strides=(2,2)))
-         model.add(ZeroPadding2D((1,1)))
+        model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+         model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(256, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
+        model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(256, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
+        model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(256, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(MaxPooling2D((2,2), strides=(2,2)))
-         model.add(ZeroPadding2D((1,1)))
+        model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+         model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
+        model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
+        model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(MaxPooling2D((2,2), strides=(2,2)))
-         model.add(ZeroPadding2D((1,1)))
+        model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+         model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
+        model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
+        model.add(ZeroPadding2D((1, 1)))
         model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(MaxPooling2D((2,2), strides=(2,2)))
+        model.add(MaxPooling2D((2, 2), strides=(2, 2)))
          model.add(Flatten())
         model.add(Dense(4096, LeakyReLU(alpha=0.3)))
         model.add(Dropout(0.5))
         model.add(Dense(4096, LeakyReLU(alpha=0.3)))
         model.add(Dropout(0.5))
-        model.add(Dense(klassen, activation='softmax'))
+        model.add(Dense(classes, activation='softmax'))
         return model
      def fit_model(self, dataset, cv = 10):
         image_size = 224
+
          # Training and Validation
         train_datagen = ImageDataGenerator(
             rescale=1./255,
@@ -71,6 +62,7 @@ from keras import optimizers
             horizontal_flip=True,
             fill_mode='nearest')
          validation_datagen = ImageDataGenerator(rescale=1./255)
+         
              # Change the batchsize according to your system RAM
         train_batchsize = 100
         val_batchsize = 10
@@ -103,7 +95,7 @@ from keras import optimizers
             verbose=1)
         
         # Save the model
-        model.save('age_model.h5')
+        model.save('gender_model.h5')
         # Plot training and validation data
         acc = history.history['acc']
         val_acc = history.history['val_acc']
