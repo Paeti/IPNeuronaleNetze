@@ -5,7 +5,7 @@ import tensorflow as tf
 class DataLoader:
     def __init__(self, filepath):
         dataset = tf.data.TFRecordDataset(filepath)
-        dataset = dataset.map(_parse_function, num_parallel_calls=8)
+        dataset = dataset.map(self._parse_function, num_parallel_calls=8)
         dataset = dataset.repeat()
         dataset = dataset.shuffle(30)
         dataset = dataset.batch(10)

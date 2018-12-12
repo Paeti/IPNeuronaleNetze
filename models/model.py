@@ -1,9 +1,9 @@
-from keras.applications import VGG16
-from keras.preprocessing.image import ImageDataGenerator
+from tensorflow.python.keras.applications import VGG16
+from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
-from keras import models
-from keras import layers
-from keras import optimizers
+from tensorflow.python.keras import models
+from tensorflow.python.keras import layers
+from tensorflow.python.keras import optimizers
 
 
 class Model:

@@ -1,30 +1,32 @@
 import tensorflow as tf
-
+import sys
+sys.path.append('..')
 from data_loader.data_generator import DataGenerator
 from models.model import Model
 from trainers.trainer import Trainer
-from utils.config import process_config
+""" from utils.config import process_config
 from utils.dirs import create_dirs
 from utils.logger import Logger
-from utils.utils import get_args
+from utils.utils import get_args """
 
 
 def main():
     # capture the config path from the run arguments
     # then process the json configuration file
-    try:
-        args = get_args()
-        config = process_config(args.config)
+    #try:
+    #   args = get_args()
+    #    config = process_config(args.config)
 
-    except:
-        print("missing or invalid arguments")
-        exit(0)
+    #except:
+    #   print("missing or invalid arguments")
+    #   exit(0)
 
     genderFilepath = "filpath to gender"
     ageFilepath = "filepath to age"
     # create the experiments dirs
-    create_dirs([config.summary_dir, config.checkpoint_dir])
+    #create_dirs([config.summary_dir, config.checkpoint_dir])
     # create tensorflow session
+    config = None
     sess = tf.Session()
     # create your data generator
     genderData = DataGenerator(config, genderFilepath)
@@ -34,11 +36,11 @@ def main():
     genderModel = Model(config, 2)
     ageModel = Model(config, 101)
     # create tensorboard logger
-    logger = Logger(sess, config)
+    #logger = Logger(sess, config)
     # create trainer and pass all the previous components to it
     genderTrainer = Trainer(
-        sess, genderModel, genderData, config, logger)
-    ageTrainer = Trainer(sess, ageModel, ageData, config, logger)
+        sess, genderModel, genderData, config)
+    ageTrainer = Trainer(sess, ageModel, ageData, config)
     # load gender model if exists
     genderModel.load(sess)
     # here you train your gender model
