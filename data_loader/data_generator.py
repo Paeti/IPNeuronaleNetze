@@ -1,10 +1,13 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from data_loader.data_loader import DataLoader
 
 
 class DataGenerator:
-    def __init__(self, config):
+    def __init__(self, config, filepath):
         self.config = config
-        # load data here
+        self.data = DataLoader(filepath)
         self.input = np.ones((500, 784))
         self.y = np.ones((500, 10))
 

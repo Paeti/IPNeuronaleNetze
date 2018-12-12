@@ -1,8 +1,8 @@
 import tensorflow as tf
 
 from data_loader.data_generator import DataGenerator
-from models.example_model import ExampleModel
-from trainers.example_trainer import ExampleTrainer
+from models.model import Model
+from trainers.trainer import Trainer
 from utils.config import process_config
 from utils.dirs import create_dirs
 from utils.logger import Logger
@@ -20,23 +20,37 @@ def main():
         print("missing or invalid arguments")
         exit(0)
 
+    genderFilepath = "filpath to gender"
+    ageFilepath = "filepath to age"
     # create the experiments dirs
     create_dirs([config.summary_dir, config.checkpoint_dir])
     # create tensorflow session
     sess = tf.Session()
     # create your data generator
-    data = DataGenerator(config)
-    
+    genderData = DataGenerator(config, genderFilepath)
+    ageData = DataGenerator(config, ageFilepath)
+
     # create an instance of the model you want
-    model = ExampleModel(config)
+    genderModel = Model(config, 2)
+    ageModel = Model(config, 101)
     # create tensorboard logger
     logger = Logger(sess, config)
     # create trainer and pass all the previous components to it
-    trainer = ExampleTrainer(sess, model, data, config, logger)
-    #load model if exists
-    model.load(sess)
-    # here you train your model
-    trainer.train()
+    genderTrainer = Trainer(
+        sess, genderModel, genderData, config, logger)
+    ageTrainer = Trainer(sess, ageModel, ageData, config, logger)
+    # load gender model if exists
+    genderModel.load(sess)
+    # here you train your gender model
+    genderTrainer.train()
+    # load age model if exists
+    ageModel.load(sess)
+    # here you train your age model
+    ageTrainer.train()
+
+    # for the saving of god
+    genderModel.save('gender_model.h5')
+    ageModel.save('age_model.h5')
 
 
 if __name__ == '__main__':
