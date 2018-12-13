@@ -9,15 +9,16 @@ print("-> Starting read of metadata file")
 
 #facelocation for each image in seperate landmark file -> needs to be downloaded
 #needs to be added to the following
-with open('metadata.csv', 'r') as file:
+with open("cacd_metadata.csv", 'r', encoding='iso8859_10') as file:
     lines = [line.rstrip('\n') for line in file]
     # dob, age, path
     age = lines[2]
     full_path = lines[4]
 
-    age = age.lstrip('[').rstrip(']')
     age = age.split(' ')
-    age = [float(x) for x in age]
+    for count, x in enumerate(age):
+        age[count] = x.lstrip('[').rstrip(']')
+        age[count] = float(age[count])
     print(age[0])
 
     full_path = full_path.split(' ')
@@ -33,7 +34,7 @@ for idx, val in enumerate(full_path):
         I[val] = {"age": -1}
 
 #changing path to imdb file !!
-    I[val]["img"] = cv.imread("cacd" + "/" + val)
+    I[val]["img"] = cv.imread("/home/alex/Downloads/CACD_2000_example" + "/" + val)
     try:
         I[val]["img"] = cv.resize(I[val]["img"], (224, 224))
     except:
@@ -51,9 +52,8 @@ for k, v in I.items():
 print("-> training set ready for splitting")
 
 
-#size_training = 300000/len(I)
-#size_test = 10000/len(I)
 
+#number of pictures for training set
 size_training = 100000/len(I)
 
 '''
@@ -70,6 +70,7 @@ X_train, X_tmp, Y_train, Y_tmp = train_test_split(
     X, Y, train_size=size_training, random_state=1
 )
 
+#number of pictures for validation set
 size_val = 50000/len(X_tmp)
 
 X_val, X_test, Y_val, Y_test = train_test_split(
