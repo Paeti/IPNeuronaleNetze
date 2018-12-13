@@ -21,8 +21,8 @@ def main():
     #   print("missing or invalid arguments")
     #   exit(0)
 
-    genderFilepath = "filpath to gender"
-    ageFilepath = "filepath to age"
+    genderFilepath = "E:\trainset for gender.tfrecords"
+    ageFilepath = "E:\trainset for age.tfrecords"
     # create the experiments dirs
     #create_dirs([config.summary_dir, config.checkpoint_dir])
     # create tensorflow session
