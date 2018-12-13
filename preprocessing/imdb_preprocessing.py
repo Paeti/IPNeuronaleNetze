@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
+import os.path
 
 print("-> Starting read of metadata file")
 with open('imdb_metadata.csv', 'r') as file:
@@ -53,11 +54,13 @@ for idx, val in enumerate(full_path):
                   "gender": gender[idx], "photo_taken": datetime.strptime(photo_taken[idx], "%Y"),
                   "face_location": face_location[idx]}
         I[val]["age"] = -1
-#changing path to imdb file !!
-    I[val]["img"] = cv.imread("imdb_ex" + "/" + val)
-    try:
-        I[val]["img"] = cv.resize(I[val]["img"], (224, 224))
-    except:
+    I[val]["img_path"] = "imdb_crop/" + val
+
+    if not os.path.isfile("imdb_crop" + "/" + val):
+        del I[val]
+        continue
+    im_test = cv.imread("imdb_crop" + "/" + val)
+    if im_test is None:
         del I[val]
 
 #print(I["01/nm0000001_rm124825600_1899-5-10_1968.jpg"])
@@ -68,7 +71,7 @@ X = []
 Y_age = []
 Y_gender = []
 for k, v in I.items():
-    X.append(v["img"])
+    X.append(v["img_path"])
     Y_age.append(
         v["age"]
     )
@@ -79,7 +82,7 @@ print("-> training set ready for splitting")
 
 
 #number of images for trainingset
-size_training = 300000/len(I)
+size_training = (len(I) * 0.75) / len(I)
 
 '''
     X_train = images for trainingset
@@ -99,7 +102,7 @@ X_train, X_tmp, Y_age_train, Y_age_tmp, Y_gender_train, Y_gender_tmp = train_tes
 )
 
 #number of images for validationset
-size_val = 90000/len(X_tmp)
+size_val = (len(X_tmp) * 0.2) / len(X_tmp)
 
 X_val, X_test, Y_age_val, Y_age_test, Y_gender_val, Y_gender_test = train_test_split(
     X_tmp, Y_age_tmp, Y_gender_tmp, train_size=size_val, random_state=1
@@ -108,8 +111,11 @@ X_val, X_test, Y_age_val, Y_age_test, Y_gender_val, Y_gender_test = train_test_s
 print("-> dataset splitted")
 
 #load images
-def load_image(img):
-    #img = cv.resize(img, (224, 224), interpolation=cv.INTER_CUBIC)
+def load_image(img_path):
+    img = cv.imread(img_path)
+    if img is None:
+        return None
+    img = cv.resize(img, (224, 224), interpolation=cv.INTER_CUBIC)
     img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     img = img.astype(np.float32)
     return img
@@ -122,6 +128,31 @@ def _int64_feature(value):
 def _bytes_feature(value):
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
+def write_tfrecord(path, datasetX, datasetY):
+    import math
+    writer = tf.python_io.TFRecordWriter(path)
+    print("-> starting tfrecord export of " + path)
+    
+    #from tqdm import tqdm
+    #for i in tqdm(range(len(datasetX))):
+    for i in range(len(datasetX)):
+        img = load_image(datasetX[i])
+        if img is None:
+            continue
+        '''
+        choose the right label you want to train on    
+        '''
+
+        label = datasetY[i]
+
+        label = int(label) if not math.isnan(label) else -1
+
+        feature = {'train/label': _int64_feature(label),
+                   'train/image': _bytes_feature(tf.compat.as_bytes(img.tostring()))}
+
+        example = tf.train.Example(features=tf.train.Features(feature=feature))
+        writer.write(example.SerializeToString())
+    writer.close()
 
 #write data in tfrecords file
 train_filename1 = 'trainset for age.tfrecords'
@@ -131,24 +162,11 @@ validation_filename2 = 'validationset for gender.tfrecords'
 test_filename1 = 'testset for age.tfrecords'
 test_filename2 = 'testset for gender.tfrecords'
 
-writer = tf.python_io.TFRecordWriter(train_filename1)
-
-for i in range(len(X_train)):
-    img = load_image(X_train[i])
-
-    '''
-    choose the right label you want to train on    
-    '''
-
-    label = Y_age_train[i]
-
-    label = int(label)
-
-    feature = {'train/label': _int64_feature(label),
-               'train/image': _bytes_feature(tf.compat.as_bytes(img.tostring()))}
-
-    example = tf.train.Example(features=tf.train.Features(feature=feature))
-    writer.write(example.SerializeToString())
-writer.close()
+write_tfrecord(train_filename1, X_train, Y_age_train)
+write_tfrecord(train_filename2, X_train, Y_gender_train)
+write_tfrecord(validation_filename1, X_val, Y_age_val)
+write_tfrecord(validation_filename2, X_val, Y_gender_val)
+write_tfrecord(test_filename1, X_test, Y_age_test)
+write_tfrecord(test_filename2, X_test, Y_age_test)
 
 print("-> created and wrote trfrecords file for selected dataset")
