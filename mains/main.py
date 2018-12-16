@@ -27,7 +27,10 @@ def buildModel(identifier):
     model = Model(inputs=input, outputs=x)
     # Optimize the model
     sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(optimizer=sgd, loss='categorical_crossentropy')
+    if identifier == 1:
+        model.compile(optimizer=sgd, loss='binary_crossentropy')
+    else:
+        model.compile(optimizer=sgd, loss='categorical_crossentropy')
     return model
 
 
