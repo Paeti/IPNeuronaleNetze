@@ -4,33 +4,52 @@ from tensorflow.python.keras.applications.vgg16 import VGG16
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.layers import Input, Flatten, Dense, Dropout
 from tensorflow.python.keras.optimizers import SGD
+from tensorflow.python.keras.backend import eval
+from tensorflow.python.keras.backend import eval
 import numpy as np
 
 
-
 def buildModel(identifier):
+    # Setting optimizers for VGG16Model and customModel
+    optimizerForVGG16 = SGD(lr=0.0001, decay=0.0005,
+                            momentum=0.9, nesterov=True)
+    optimizerForCustomModel = SGD(
+        lr=0.001, decay=0.0005, momentum=0.9, nesterov=True)
     # Build VGG16 from Caffeemodel with pretrained weights
-    VGG16model = VGG16(weights="imagenet", include_top=False)
+    VGG16Model = VGG16(weights="imagenet", include_top=False)
+    # 
+    if identifier == 1:
+        VGG16Model.compile(optimizer=optimizerForVGG16,
+                           loss='binary_crossentropy')
+    else:
+        VGG16Model.compile(optimizer=optimizerForVGG16,
+                           loss='categorical_crossentropy')
+    print(eval(VGG16Model.optimizer.lr))    
     # Define the input
     input = Input(shape=(224, 224, 3), name='imageInput')
     # Use the generated model
-    VGG16output = VGG16model(input)
+    VGG16output = VGG16Model(input)
     # Add the fully-connected layers
-    x = Flatten(name='flatten')(VGG16output)
+    xInput = Input(shape=(7, 7, 512))
+    x = Flatten(name='flatten')(xInput)
     x = Dense(4096, activation='relu', name='fc1')(x)
     x = Dense(4096, activation='relu', name='fc2')(x)
     if identifier == 1:
         x = Dense(1, activation='sigmoid', name='predictions')(x)
     else:
         x = Dense(101, activation='softmax', name='predictions')(x)
-    # Create our own model
-    model = Model(inputs=input, outputs=x)
-    # Optimize the model
-    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
+    customModel = Model(inputs = xInput, outputs = x, name='customModel')
     if identifier == 1:
-        model.compile(optimizer=sgd, loss='binary_crossentropy')
+       customModel.compile(optimizer=optimizerForCustomModel,
+                           loss='binary_crossentropy')
     else:
-        model.compile(optimizer=sgd, loss='categorical_crossentropy')
+        customModel.compile(optimizer=optimizerForCustomModel,
+                           loss='categorical_crossentropy')
+    # Create our own model
+    outputLayerOfVGG16Model = VGG16Model.get_layer('block5_pool').output
+    mergedModels = customModel(outputLayerOfVGG16Model)
+    model = Model(inputs = VGG16Model.input, outputs= mergedModels)
+
     return model
 
 
