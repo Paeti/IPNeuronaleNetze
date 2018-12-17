@@ -17,7 +17,6 @@ def buildModel(identifier):
         lr=0.001, decay=0.0005, momentum=0.9, nesterov=True)
     # Build VGG16 from Caffeemodel with pretrained weights
     VGG16Model = VGG16(weights="imagenet", include_top=False)
-    # 
     if identifier == 1:
         VGG16Model.compile(optimizer=optimizerForVGG16,
                            loss='binary_crossentropy')
@@ -92,21 +91,16 @@ def main():
     # create tensorflow session
     sess = tf.Session()
     # create your data generator
-    genderData = generateData("filpathToGenderTrainset")
-    ageData = generateData("filpathToAgeTrainset")
+    genderDataImage, genderDataLabel = generateData("filpathToGenderTrainset")
+    ageDataImage, ageDataLabel = generateData("filpathToAgeTrainset")
     # create an instance of the model you want
     genderModel = buildModel(1)
     ageModel = buildModel(0)
     # create tensorboard logger
     #logger = Logger(sess, config)
     # create trainer and pass all the previous components to it
-    trainer = trainModel(sess, genderModel, genderData)
-    trainer = trainModel(sess, ageModel, ageData)
-    # load model if exists
-    genderModel.load(sess)
-    ageModel.load(sess)
-    # here you train your model
-    trainer.train()
+    trainModel(sess, genderModel, genderDataImage, genderDataLabel)
+    trainModel(sess, ageModel, ageDataImage, ageDataLabel)
 
 
 if __name__ == '__main__':
