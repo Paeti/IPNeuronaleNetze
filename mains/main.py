@@ -5,6 +5,7 @@ sys.path.append(parent_dir)
 
 from models.model import OurModel
 from data_loaders.data_loader import DataLoader
+from trainers.trainer import Trainer
 from tensorflow.python.keras.backend import eval
 
 def trainModel(model, data):
@@ -25,17 +26,11 @@ def main():
     ageModel = OurModel(0)
     genderModel.model.summary()
     ageModel.model.summary()
-    # create tensorboard logger
-    #logger = Logger(sess, config)
-        # create your data generator
-
-    genderData = DataLoader("/Users/max/Desktop/trainsetForGender.tfrecords")
-    ageData = DataLoader("/Users/max/Desktop/trainsetForAge.tfrecords")
-    print(genderData.images)
-    print(genderData.labels)
+   
+    genderModel.model.fit()
     # create trainer and pass all the previous components to it
-    """ trainModel(sess, genderModel, genderDataImage, genderDataLabel)
-    trainModel(sess, ageModel, ageDataImage, ageDataLabel) """
+    trainModel(sess, genderModel)
+    trainModel(sess, ageModel)
 
 
 if __name__ == '__main__':

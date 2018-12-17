@@ -1,9 +1,12 @@
 import tensorflow as tf
 
-class DataLoader:
-    def __init__(self, filepath):
-        self.images, self.labels = self.generateData(filepath)
-    def generateData(self, filepath):
+class Trainer:
+    def __init__(self, model, session, filepath):
+        
+    def training():
+
+
+    def loadData(filepath):
         feature = {'train/image': tf.FixedLenFeature([], tf.string),
                'train/label': tf.FixedLenFeature([], tf.int64)}
         # Create a list of filenames and pass it to a queue
