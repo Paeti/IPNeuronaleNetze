@@ -1,109 +1,55 @@
 import tensorflow as tf
-
-from keras.models import Sequential
-from keras.layers.core import Flatten,Dense,Dropout
-from keras.layers.advanced_activations import LeakyReLU
-from keras.activations import relu
-from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
-
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.linear_model import Lasso
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.applications.vgg16 import VGG16
+from tensorflow.python.keras.models import Model
+from tensorflow.python.keras.layers import Input, Flatten, Dense, Dropout
+from tensorflow.python.keras.optimizers import SGD
+from tensorflow.python.keras.backend import eval
+import numpy as np
 
 
+class OurModel:
+    def __init__(self, identifier):
+        self.model = self.buildModel(identifier)
 
-class Model:
-    def __init__(self, config):
-        self.fit_model()
-        self.build_model()
-    #**
-    # Hier könnte man die input/Image größe oder die reihenfolge der Features
-    # selbst noch ändern aber default ist die von VGG 16
-    #**
-    def build_model(self,input_shape=(3,224,224)):
-        #**
-        # Ich habe die python implementation von vgg 16 genommen und
-        # bis auf die Aktivierungsfunktinen nichts geändert
-        #**
-        model = Sequential()
-        model.add(ZeroPadding2D((1,1),input_shape))
-        #**
-        # Ich habe mich für die Aktivierungsfunktion LeakyRelu (vorher einfache Relu)
-        # entschieden um dem Problem des "dying relu" zu umgehen.
-        # Im grunde optimiert die LeakyRelu nur das gradienten verfahren welches
-        # zur Fehlerminimierung genutzt wird.
-        # Genaueres siehe: https://www.quora.com/What-are-the-advantages-of-using-Leaky-Rectified-Linear-Units-Leaky-ReLU-over-normal-ReLU-in-deep-learning
-        #**
-        model.add(Convolution2D(64, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(64, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(MaxPooling2D((2,2), strides=(2,2)))
-
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(128, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(128, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(MaxPooling2D((2,2), strides=(2,2)))
-
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(256, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(256, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(256, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(MaxPooling2D((2,2), strides=(2,2)))
-
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(MaxPooling2D((2,2), strides=(2,2)))
-
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(ZeroPadding2D((1,1)))
-        model.add(Convolution2D(512, 3, 3, LeakyReLU(alpha=0.3)))
-        model.add(MaxPooling2D((2,2), strides=(2,2)))
-
-        model.add(Flatten())
-        model.add(Dense(4096, LeakyReLU(alpha=0.3)))
-        model.add(Dropout(0.5))
-        model.add(Dense(4096, LeakyReLU(alpha=0.3)))
-        model.add(Dropout(0.5))
-        #**
-        # Hier ist der hintergedanke das wir zwei werte zwischen 0 und 99 bekommen
-        # ein Wert für das alter von 0 bis 99 Jahre
-        # und ein Wert für das Geschlecht z.B. zwischen 0 - 49 für eine Frau
-        # und von 50 - 99 für einen Mann
-        #**
-        model.add(Dense(2, relu(99, alpha=0.0, max_value=None, threshold=0.0)))
-
+    def buildModel(self, identifier):
+        # Setting optimizers for VGG16Model and customModel
+        optimizerForVGG16 = SGD(lr=0.0001, decay=0.0005,
+                                momentum=0.9, nesterov=True)
+        optimizerForCustomModel = SGD(
+            lr=0.001, decay=0.0005, momentum=0.9, nesterov=True)
+        # Build VGG16 from Caffeemodel with pretrained weights
+        VGG16Model = VGG16(weights="imagenet", include_top=False)
+        # Optimize VGG16 for gender- and agemodel
+        if identifier == 1:
+            VGG16Model.compile(optimizer=optimizerForVGG16,
+                               loss='binary_crossentropy')
+        else:
+            VGG16Model.compile(optimizer=optimizerForVGG16,
+                               loss='categorical_crossentropy')
+        # Define the input
+        input = Input(shape=(224, 224, 3), name='imageInput')
+        # Use the generated model
+        VGG16output = VGG16Model(input)
+        # Add the fully-connected layers
+        xInput = Input(shape=(7, 7, 512))
+        x = Flatten(name='flatten')(xInput)
+        x = Dense(4096, activation='relu', name='fc1')(x)
+        x = Dense(4096, activation='relu', name='fc2')(x)
+        # Optimize the appended last layers for gender- and agemodel
+        if identifier == 1:
+            x = Dense(1, activation='sigmoid', name='predictions')(x)
+        else:
+            x = Dense(101, activation='softmax', name='predictions')(x)
+        customModel = Model(inputs=xInput, outputs=x, name='customModel')
+        if identifier == 1:
+            customModel.compile(optimizer=optimizerForCustomModel,
+                                loss='binary_crossentropy')
+        else:
+            customModel.compile(optimizer=optimizerForCustomModel,
+                                loss='categorical_crossentropy')
+        # Create our own model
+        outputLayerOfVGG16Model = VGG16Model.get_layer('block5_pool').output
+        mergedModels = customModel(outputLayerOfVGG16Model)
+        model = Model(inputs=VGG16Model.input, outputs=mergedModels)
         return model
-
-    #**
-    # https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
-    #
-    # Parameter cv ist die anzahl der einteilung des datasets
-    # Parameter dataset ist aufgeteilt in einer zeilenvector matrix "data" die die featurespixel enthalten
-    # und eine spaltenvector matrix "target" mit den tags
-    # hier müsste angepasst werden wenn das dataset anders aufgebaut ist
-    # 
-    # I mache hier eine Random search mit verschiedenen parametern und gleichzeitig eine crossvalidation
-    # am ende gebe ich die ergebnisse aus
-    #**
-    def fit_model(self, dataset, cv = 10):
-        param_dist = {'weights': ['uniform', 'distance'], 'p': sp_randint(1, 2)}
-        n_iter_search = 100
-        param_grid = {'alpha': sp_rand()}
-        model = self.build_model()
-        rsearch = RandomizedSearchCV(estimator=model, param_distributions=param_grid, n_iter=100,cv=cv)
-        rsearch.fit(dataset.data, dataset.target)
-        print(rsearch)
-        # summarize the results of the random parameter search
-        print(rsearch.best_score_)
-        print(rsearch.best_estimator_.alpha)
-
-        pass
