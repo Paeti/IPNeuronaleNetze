@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow import keras 
+import keras 
 from DataLoader import DataLoader
 from keras import callbacks
 import json

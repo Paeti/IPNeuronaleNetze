@@ -8,12 +8,11 @@ from keras.applications.vgg16 import VGG16
 from keras.models import Model
 from keras.layers import Input, Flatten, Dense, Dropout
 from keras.optimizers import SGD
-from keras.backend import eval
 import numpy as np
-from LR_SGD import LR_SGD
+from optimizer.LR_SGD import LR_SGD
 from DataLoader import DataLoader
 from Trainer import Trainer
-from keras.legacy import interfaces
+
 
 
 
@@ -25,7 +24,7 @@ class OurModel:
     def buildModel(self, identifier, filepath):   
         dataLoader = DataLoader(filepath)
         image, labels  = dataLoader.create_dataset()
-
+        
         input_layer = Input(tensor=image)
         newModel = VGG16(weights="imagenet", include_top=False)(input_layer) 
        
@@ -54,12 +53,12 @@ class OurModel:
         # Setting optimizer for model        
         optimizer = LR_SGD(lr=0.0001, momentum=0.9, decay=0.0005, nesterov=True, multipliers = LR_mult_dict)
        
-        # Optimize VGG16 for gender- and agemodel
+        # Optimize model for gender- and agemodel
         if identifier == 1:
             model.compile(optimizer= optimizer,
-                                loss='binary_crossentropy', target_tensors=[labels])
+                                loss='binary_crossentropy', target_tensors=[labels], metrics=['mae'])
         else:
             model.compile(optimizer= optimizer,
-                                loss='categorical_crossentropy', target_tensors=[labels])  
+                                loss='categorical_crossentropy', target_tensors=[labels], metrics=['mae'])  
                              
         return model

@@ -1,20 +1,15 @@
 import tensorflow as tf
 
-from tensorflow import keras 
+import keras 
 #from keras import callbacks
 import json
 
 class DataLoader:
+
     def __init__(self, filepath):  
-        self.filepath  = filepath              
-        self.batchsize =  100
-        self.epochs =  50
-        #self.validation_dataset_filepath =  validation_dataset_filepath
-        self.steps_per_epoch = 10000/self.batchsize #Noch anpassen (SUM_OF_ALL_DATASAMPLES / BATCHSIZE)
-        #self.verbose =  1       
-
+        self.filepath  = filepath  
+        
     
-
     def _parse_function(self,proto):
         # define your tfrecord again. Remember that you saved your image as a string.
         keys_to_features = {'train/image': tf.FixedLenFeature([], tf.string),
@@ -30,22 +25,33 @@ class DataLoader:
         return parsed_features['train/image'], parsed_features["train/label"]
 
     
-    def create_dataset(self):
+    def create_dataset(self,buffer_size =2048, train = True, batch_size = 1):
         
         # This works with arrays as well
         dataset = tf.data.TFRecordDataset(self.filepath)
         
         # Maps the parser on every filepath in the array. You can set the number of parallel loaders here
-        dataset = dataset.map(self._parse_function, num_parallel_calls=1)
+        dataset = dataset.map(self._parse_function, num_parallel_calls=4)
         
-        # This dataset will go on forever
-        dataset = dataset.repeat()
+        if train:
+        # If training then read a buffer of the given size and
+        # randomly shuffle it.
+            dataset = dataset.shuffle(buffer_size=buffer_size)
+
+        # Allow infinite reading of the data.
+            num_repeat = None
+        else:
+        # If testing then don't shuffle the data.        
+        # Only go through the data once.
+            num_repeat = 1
+
+        # Repeat the dataset the given number of times.
+        dataset = dataset.repeat(num_repeat)       
         
-        # Set the number of datapoints you want to load and shuffle 
-        dataset = dataset.shuffle(1)
+        # Set the number of datapoints you want to load and shuffle        
         
         # Set the batchsize
-        dataset = dataset.batch(1)
+        dataset = dataset.batch(batch_size)       
         
         # Create an iterator
         iterator = dataset.make_one_shot_iterator()
@@ -54,7 +60,7 @@ class DataLoader:
         image, label = iterator.get_next()
 
         # Bring your picture back in shape
-        image = tf.reshape(image, [-1, 224, 224, 3])
+        image = tf.reshape(image, [1, 224, 224, 3])
         
         # Create a one hot array for your labels
         label = tf.one_hot(label, 1)
