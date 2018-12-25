@@ -16,7 +16,7 @@ from keras.legacy import interfaces
 from DataLoader import DataLoader
 from Trainer import Trainer
 
-filepath = 'C:\\Users\\ckrem\\Desktop\\IP\\age.tfrecords '
+filepath = ''
 class modelTest(tf.test.TestCase):
     def test_one_training_step_AllEqual(self):
         with self.test_session():

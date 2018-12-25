@@ -14,7 +14,7 @@ class Trainer:
 	def __init__(self, model, filepath, identifier):		
 		self.filepath = filepath
 		self.model = model		
-		self.saved_model_path = 'C:\\Users\\ckrem\\Desktop\\IP'
+		self.saved_model_path = ''
 		self.identifier = identifier
 		self.Trainer = self.training()    
 		
