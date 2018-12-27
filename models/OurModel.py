@@ -9,9 +9,9 @@ from keras.models import Model
 from keras.layers import Input, Flatten, Dense, Dropout
 from keras.optimizers import SGD
 import numpy as np
-from optimizer.LR_SGD import LR_SGD
-from DataLoader import DataLoader
-from Trainer import Trainer
+from models.optimizer.LR_SGD import LR_SGD
+from models.dataloaders.DataLoader import DataLoader
+from trainers.Trainer import Trainer
 
 
 

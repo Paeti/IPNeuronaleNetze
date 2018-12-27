@@ -3,10 +3,11 @@ parent_dir = os.getcwd()
 sys.path.append(parent_dir)
 
 import tensorflow as tf
-from DataLoader import DataLoader
+from models.dataloaders.DataLoader import DataLoader
 from tensorflow import keras 
 from keras import callbacks
-from optimizer.cb import Cback
+from models.optimizer.LR_SGD import LR_SGD
+from models.optimizer.cb import Cback
 import json
 
 class Trainer:
@@ -14,7 +15,7 @@ class Trainer:
 	def __init__(self, model, filepath, identifier):		
 		self.filepath = filepath
 		self.model = model		
-		self.saved_model_path = ''
+		self.saved_model_path = os.getcwd()+"\\models\\weights"
 		self.identifier = identifier
 		self.Trainer = self.training()    
 		
@@ -27,12 +28,12 @@ class Trainer:
 		callbacks = Cback()
 		callbacks = callbacks.makeCb()
 		
-		self.model.fit(x=images, y=labels, steps_per_epoch=5, epochs=1, callbacks= callbacks)			
+		self.model.fit(x=images, y=labels, steps_per_epoch=1, epochs=1, callbacks= callbacks)			
 		
 		if self.identifier == 1:
-			self.model.save_weights("GenderModel_weights.h5")
+			self.model.save_weights(self.saved_model_path+"\\GenderModel_weights.h5")
 		else:
-			self.model.save_weights("AgeModel_weights.h5")
+			self.model.save_weights(self.saved_model_path+"\\AgeModel_weights.h5")
 		
 		# tf.contrib.saved_model.save_keras_model(
         #     self.model, self.saved_model_path, custom_objects=None, as_text=None)	

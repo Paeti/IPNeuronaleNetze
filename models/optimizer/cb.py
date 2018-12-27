@@ -1,6 +1,6 @@
 import tensorflow as tf
 import keras 
-from DataLoader import DataLoader
+from models.dataloaders.DataLoader import DataLoader 
 from keras import callbacks
 import json
 
@@ -8,9 +8,7 @@ import json
 class Cback:
 	
 	def __init__(self):
-		self.batchsize =  []    
-		
-	
+		self.batchsize =  [] 
 
 	def makeCb(self):
 		
