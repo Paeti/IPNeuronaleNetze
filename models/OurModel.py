@@ -1,19 +1,17 @@
 import sys, os
 parent_dir = os.getcwd()
-sys.path.append(parent_dir)
+sys.path.append("/Users/ronnyaretz/IPNeuronaleNetze")
+sys.path.append("/Users/ronnyaretz/IPNeuronaleNetze/trainers")
 import tensorflow as tf
-import keras
-from keras.models import Sequential
-from keras.applications.vgg16 import VGG16
-from keras.models import Model
-from keras.layers import Input, Flatten, Dense, Dropout
-from keras.optimizers import SGD
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.applications.vgg16 import VGG16
+from tensorflow.python.keras.models import Model
+from tensorflow.python.keras.layers import Flatten, Dense, Dropout, GlobalAveragePooling2D
+from tensorflow.python.keras.optimizers import SGD
 import numpy as np
 from models.optimizer.LR_SGD import LR_SGD
 from models.dataloaders.DataLoader import DataLoader
-from trainers.Trainer import Trainer
-
-
+from Trainer import Trainer
 
 
 class OurModel:
@@ -22,26 +20,23 @@ class OurModel:
         self.filepath = filepath
 
     def buildModel(self, identifier, filepath):   
-        dataLoader = DataLoader(filepath)
-        image, labels  = dataLoader.create_dataset()
-        
-        input_layer = Input(tensor=image)
-        newModel = VGG16(weights="imagenet", include_top=False)(input_layer) 
-       
-        # Define the input
-        xInput =  newModel  
-        # Add the fully-connected layers
-        x = Flatten(name='flatten')(xInput)
-        x = Dense(4096, activation='relu', name='fc1')(x)
-        x = Dense(4096, activation='relu', name='fc2')(x) 
+        # LOAD VGG16
+        base_model = VGG16(weights='imagenet', include_top=False)
+        fyipg = base_model.output
 
-        if identifier == 1:
-            x = Dense(1, activation='sigmoid', name='predictions')(x)
-        else:
-            x = Dense(101, activation='softmax', name='predictions')(x)
+        # add a global spatial average pooling layer
+        fyipg = GlobalAveragePooling2D()(fyipg)
         
-        # Create our own model
-        model = Model(inputs=input_layer, outputs=x)
+        # let's add a fully-connected layer
+        fyipg = Dense(4096, activation='relu', name='AdditianlLayer1')(fyipg)
+        fyipg = Dense(4096, activation='relu', name='AdditianlLayer2')(fyipg)
+        if identifier == 1:
+            fyipg = Dense(1, activation='sigmoid', name='predictions')(fyipg)
+        else:
+            fyipg = Dense(101, activation='softmax', name='predictions')(fyipg)
+
+        # this is the model we will train
+        model = Model(inputs=base_model.input, outputs=fyipg)
 
         # Setting the Learning rate multipliers
         LR_mult_dict = {}
@@ -52,13 +47,13 @@ class OurModel:
 
         # Setting optimizer for model        
         optimizer = LR_SGD(lr=0.0001, momentum=0.9, decay=0.0005, nesterov=True, multipliers = LR_mult_dict)
-       
+
         # Optimize model for gender- and agemodel
         if identifier == 1:
             model.compile(optimizer= optimizer,
-                                loss='binary_crossentropy', target_tensors=[labels], metrics=['mae'])
+                                loss='binary_crossentropy', metrics=['mae'])
         else:
             model.compile(optimizer= optimizer,
-                                loss='categorical_crossentropy', target_tensors=[labels], metrics=['mae'])  
+                                loss='categorical_crossentropy', metrics=['mae'])  
                              
         return model

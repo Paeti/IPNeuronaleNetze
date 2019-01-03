@@ -1,7 +1,9 @@
-from keras.legacy import interfaces
-import keras.backend as K
-from keras.optimizers import Optimizer
 
+from tensorflow.python.keras import backend as K
+from tensorflow.python.keras.optimizers import Optimizer
+from tensorflow.python.util.tf_export import tf_export
+
+@tf_export('keras.optimizers.SGD')
 class LR_SGD(Optimizer):
     """Stochastic gradient descent optimizer.
 
@@ -27,14 +29,13 @@ class LR_SGD(Optimizer):
         self.nesterov = nesterov
         self.lr_multipliers = multipliers
 
-    @interfaces.legacy_get_updates_support
     def get_updates(self, loss, params):
         grads = self.get_gradients(loss, params)
         self.updates = [K.update_add(self.iterations, 1)]
 
         lr = self.lr
         if self.initial_decay > 0:
-            lr *= (1. / (1. + self.decay * K.cast(self.iterations,
+            lr =lr * (1. / (1. + self.decay * K.cast(self.iterations,
                                                   K.dtype(self.decay))))
         # momentum
         shapes = [K.int_shape(p) for p in params]

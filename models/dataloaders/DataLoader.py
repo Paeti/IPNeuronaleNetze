@@ -1,7 +1,7 @@
 import tensorflow as tf
 
-import keras 
-#from keras import callbacks
+import tensorflow.python.keras
+from tensorflow.python.keras import callbacks
 import json
 
 class DataLoader:
@@ -60,7 +60,7 @@ class DataLoader:
         image, label = iterator.get_next()
 
         # Bring your picture back in shape
-        image = tf.reshape(image, [1, 224, 224, 3])
+        image = tf.reshape(image, [-1, 224, 224, 3])
         
         # Create a one hot array for your labels
         label = tf.one_hot(label, 1)

@@ -1,27 +1,23 @@
 import sys, os
 parent_dir = os.getcwd()
-sys.path.append(parent_dir)
+sys.path.append("/Users/ronnyaretz/IPNeuronaleNetze")
+sys.path.append("/Users/ronnyaretz/IPNeuronaleNetze/trainers")
 import tensorflow as tf
-import keras
-from keras.models import Sequential
-from keras.applications.vgg16 import VGG16
-from keras.models import Model
-from keras.layers import Input, Flatten, Dense, Dropout
 import numpy as np
 from models.optimizer.LR_SGD import LR_SGD
 from models.OurModel import OurModel
 from models.dataloaders.DataLoader import DataLoader
-from trainers.Trainer import Trainer
+from Trainer import Trainer
 
-filepathGender = os.getcwd()+"\\data\\gender.tfrecords"
-filepathAge = os.getcwd()+"\\data\\age.tfrecords"
+filepathGender = "/Users/ronnyaretz/IPNeuronaleNetze/data/gender.tfrecords"
+filepathAge = "/Users/ronnyaretz/IPNeuronaleNetze/data/age.tfrecords"
 class modelTest(tf.test.TestCase):
 
     # Test whether weights files get created after training
     def test_weights_get_saved(self):
         with self.test_session():
             stored = True
-            GenderModelWeights = os.getcwd()+"\\models\\weights\\GenderModel_weights.h5"
+            GenderModelWeights = "/Users/ronnyaretz/IPNeuronaleNetze/models/weights/GenderModel_weights.h5"
             GenderModel = OurModel(1, filepathGender)
             GenderModel = Trainer(GenderModel.model, filepathGender, 1)
             with open(GenderModelWeights) as weightsfile:
@@ -29,9 +25,9 @@ class modelTest(tf.test.TestCase):
                 if not first:
                     stored = False            
 
-            AgeModelWeights = os.getcwd()+"\\models\\weights\\AgeModel_weights.h5"
-            AgeModel = OurModel(1, filepathAge)
-            AgeModel = Trainer(GenderModel.model, filepathAge, 0)
+            AgeModelWeights = "/Users/ronnyaretz/IPNeuronaleNetze/models/weights/AgeModel_weights.h5"
+            AgeModel = OurModel(0, filepathAge)
+            AgeModel = Trainer(AgeModel.model, filepathAge, 0)
             with open(AgeModelWeights) as weightsfile:
                 first = weightsfile.read(1)
                 if not first:
@@ -75,7 +71,7 @@ class modelTest(tf.test.TestCase):
             length=0            
             for layer in GenderModel.model.layers:
                 length = length+1 
-            self.assertEqual(length,6)
+            self.assertEqual(length,23)
 
     # Test wether the models layer length are in expected manner
     def test_AgeModel_layerLength(self):
@@ -84,7 +80,7 @@ class modelTest(tf.test.TestCase):
             length = 0
             for layer in AgeModel.model.layers:
                 length = length+1 
-            self.assertEqual(length,6)
+            self.assertEqual(length,23)
 
     # Test wether the loss of the models is not equal 0
     def test_loss_AgeModel(self):
