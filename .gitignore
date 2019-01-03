@@ -5,6 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
+*.DS_Store
 
 # Distribution / packaging
 .Python
@@ -36,6 +37,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
+.vscode/
 htmlcov/
 .tox/
 .coverage
@@ -104,3 +106,4 @@ venv.bak/
 .mypy_cache/
 mains/.idea
 preprocessing/.idea
+loss_log.json
