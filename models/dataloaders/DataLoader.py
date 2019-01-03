@@ -26,7 +26,7 @@ class DataLoader:
         return parsed_features['train/image'], parsed_features["train/label"]
 
     
-    def create_dataset(self,buffer_size =2048, train = True, batch_size = 1):
+    def create_dataset(self,buffer_size = 2048, train = True, batch_size = 64):
         
         # This works with arrays as well
         dataset = tf.data.TFRecordDataset(self.filepath)

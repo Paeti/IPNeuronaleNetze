@@ -1,7 +1,7 @@
 import sys, os
 parent_dir = os.getcwd()
-sys.path.append("/Users/ronnyaretz/IPNeuronaleNetze")
-sys.path.append("/Users/ronnyaretz/IPNeuronaleNetze/trainers")
+sys.path.append("IPNeuronaleNetze")
+sys.path.append("IPNeuronaleNetze/trainers")
 import tensorflow as tf
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.applications.vgg16 import VGG16

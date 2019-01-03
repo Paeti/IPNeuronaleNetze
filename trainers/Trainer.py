@@ -11,32 +11,31 @@ import json
 
 class Trainer:
 	
-	def __init__(self, model, filepath, identifier):		
+	def __init__(self, model, filepath, validationfilepath, identifier):		
 		self.filepath = filepath
 		self.model = model		
 		self.saved_model_path = ""
 		self.identifier = identifier
+		self.validationfilepath = validationfilepath
 		self.Trainer = self.training()
 
 	def training(self):
 
 		if self.identifier==1:
-			self.saved_model_path = "/Users/ronnyaretz/IPNeuronaleNetze/models/GenderWeights"
+			self.saved_model_path = "IPNeuronaleNetze/models/GenderWeights"
 		else:
-			self.saved_model_path = "/Users/ronnyaretz/IPNeuronaleNetze/models/AgeWeights"
+			self.saved_model_path = "IPNeuronaleNetze/models/AgeWeights"
 
 		dataLoader = DataLoader(self.filepath,self.identifier)		
-		images, labels = dataLoader.create_dataset()		
+		images, labels = dataLoader.create_dataset()
+
+		validationDataLoader = DataLoader(self.validationfilepath, self.identifier)
+		valdata = dataLoader.create_dataset()
 		
 		callbacks = Cback()
 		callbacks = callbacks.makeCb()
 		
-		self.model.fit(x=images, y=labels, steps_per_epoch=5, epochs=1, callbacks=callbacks)			
-		
-		#if self.identifier == 1:
-		#	self.model.save_weights(self.saved_model_path+"\\GenderModel_weights.h5")
-		#else:
-		#	self.model.save_weights(self.saved_model_path+"\\AgeModel_weights.h5")
+		self.model.fit(x=images, y=labels, validation_data=valdata ,steps_per_epoch=25, epochs=125, callbacks=callbacks)			
 		
 		tf.contrib.saved_model.save_keras_model(
              self.model, self.saved_model_path, custom_objects=None, as_text=None)	

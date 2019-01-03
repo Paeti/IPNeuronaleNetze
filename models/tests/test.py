@@ -9,15 +9,19 @@ from models.OurModel import OurModel
 from models.dataloaders.DataLoader import DataLoader
 from Trainer import Trainer
 
-filepathGender = "/Users/ronnyaretz/IPNeuronaleNetze/data/gender.tfrecords"
-filepathAge = "/Users/ronnyaretz/IPNeuronaleNetze/data/age.tfrecords"
+filepathGender = "IPNeuronaleNetze/data/gender.tfrecords"
+filepathGendervalidation = "IPNeuronaleNetze/data/validationgender.tfrecords"
+
+filepathAge = "IPNeuronaleNetze/data/age.tfrecords"
+filepathAgevalidation = "IPNeuronaleNetze/data/validationage.tfrecords"
+
 class modelTest(tf.test.TestCase):
 
     # Test whether weights files get created after training
     def test_weights_get_saved(self):
         with self.test_session():
             stored = True
-            GenderModelWeights = "/Users/ronnyaretz/IPNeuronaleNetze/models/weights/GenderModel_weights.h5"
+            GenderModelWeights = "IPNeuronaleNetze/models/weights/GenderModel_weights.h5"
             GenderModel = OurModel(1, filepathGender)
             GenderModel = Trainer(GenderModel.model, filepathGender, 1)
             with open(GenderModelWeights) as weightsfile:
@@ -25,7 +29,7 @@ class modelTest(tf.test.TestCase):
                 if not first:
                     stored = False            
 
-            AgeModelWeights = "/Users/ronnyaretz/IPNeuronaleNetze/models/weights/AgeModel_weights.h5"
+            AgeModelWeights = "IPNeuronaleNetze/models/weights/AgeModel_weights.h5"
             AgeModel = OurModel(0, filepathAge)
             AgeModel = Trainer(AgeModel.model, filepathAge, 0)
             with open(AgeModelWeights) as weightsfile:
@@ -95,12 +99,7 @@ class modelTest(tf.test.TestCase):
             AgeModel = OurModel(0, filepathAge) 
             AgeModel = Trainer(AgeModel.model, filepathAge, 0)            
             self.assertNotEqual(AgeModel.model.loss,0)
-       
-
 
 
 if __name__ == '__main__':
-    tf.test.main()
-  
-   
-    
+    tf.test.main() 

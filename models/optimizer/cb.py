@@ -1,6 +1,6 @@
 import sys, os
 parent_dir = os.getcwd()
-sys.path.append("/Users/ronnyaretz/IPNeuronaleNetze")
+sys.path.append("/IPNeuronaleNetze")
 import tensorflow as tf
 import tensorflow.python.keras 
 from models.dataloaders.DataLoader import DataLoader 
