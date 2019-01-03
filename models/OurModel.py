@@ -10,7 +10,6 @@ from tensorflow.python.keras.layers import Flatten, Dense, Dropout, GlobalAverag
 from tensorflow.python.keras.optimizers import SGD
 import numpy as np
 from models.optimizer.LR_SGD import LR_SGD
-from models.dataloaders.DataLoader import DataLoader
 from Trainer import Trainer
 
 

@@ -25,7 +25,7 @@ class Trainer:
 		else:
 			self.saved_model_path = "/Users/ronnyaretz/IPNeuronaleNetze/models/AgeWeights"
 
-		dataLoader = DataLoader(self.filepath)		
+		dataLoader = DataLoader(self.filepath,self.identifier)		
 		images, labels = dataLoader.create_dataset()		
 		
 		callbacks = Cback()

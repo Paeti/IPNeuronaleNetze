@@ -6,8 +6,9 @@ import json
 
 class DataLoader:
 
-    def __init__(self, filepath):  
-        self.filepath  = filepath  
+    def __init__(self, filepath, identifier):  
+        self.filepath = filepath  
+        self.identifier = identifier
         
     
     def _parse_function(self,proto):
@@ -60,10 +61,14 @@ class DataLoader:
         image, label = iterator.get_next()
 
         # Bring your picture back in shape
-        image = tf.reshape(image, [-1, 224, 224, 3])
+        image = tf.reshape(image, [1, 224, 224, 3])
         
-        # Create a one hot array for your labels
-        label = tf.one_hot(label, 1)
-        
+        if self.identifier == 1 :
+            # Create a one hot array for your labels
+            label = tf.one_hot(label, 1)
+        else:
+             # Create a one hot array for your labels
+            label = tf.one_hot(label, 101)
+            
         return image, label
 

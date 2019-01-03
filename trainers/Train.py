@@ -14,16 +14,11 @@ filepathAge = "/Users/ronnyaretz/IPNeuronaleNetze/data/age.tfrecords"
 
 def main():
 
-    #GenderModel = OurModel(1, filepathGender)
-    #GenderModel = Trainer(GenderModel.model, filepathGender, 1)
+    GenderModel = OurModel(1, filepathGender)
+    GenderModel = Trainer(GenderModel.model, filepathGender, 1)
 
     AgeModel = OurModel(0, filepathAge)
     AgeModel = Trainer(AgeModel.model, filepathAge, 0)
-    
-
-
-
-
 
 
 if __name__ == "__main__":
