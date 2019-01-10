@@ -1,7 +1,7 @@
 import sys, os
 parent_dir = os.getcwd()
-sys.path.append("IPNeuronaleNetze")
-sys.path.append("IPNeuronaleNetze/trainers")
+sys.path.append("/home/ip/IPNeuronaleNetze")
+sys.path.append("/home/ip/IPNeuronaleNetze/trainers")
 import tensorflow as tf
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.applications.vgg16 import VGG16
@@ -39,9 +39,9 @@ class OurModel:
 
         # Setting the Learning rate multipliers
         LR_mult_dict = {}
-        LR_mult_dict['flatten'] = 100
-        LR_mult_dict['fc1'] = 100
-        LR_mult_dict['fc2'] = 100   
+    
+        LR_mult_dict['AdditianLayer1'] = 100
+        LR_mult_dict['AdditianLayer2'] = 100   
         LR_mult_dict['predictions'] = 100 
 
         # Setting optimizer for model        
@@ -56,3 +56,8 @@ class OurModel:
                                 loss='categorical_crossentropy', metrics=['mae'])  
                              
         return model
+
+
+
+
+

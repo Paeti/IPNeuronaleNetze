@@ -26,7 +26,7 @@ class DataLoader:
         return parsed_features['train/image'], parsed_features["train/label"]
 
     
-    def create_dataset(self,buffer_size = 2048, train = True, batch_size = 64):
+    def create_dataset(self,buffer_size = 2048, train = True, batch_size = 1):
         
         # This works with arrays as well
         dataset = tf.data.TFRecordDataset(self.filepath)
@@ -61,7 +61,7 @@ class DataLoader:
         image, label = iterator.get_next()
 
         # Bring your picture back in shape
-        image = tf.reshape(image, [1, 224, 224, 3])
+        image = tf.reshape(image, [-1, 224, 224, 3])
         
         if self.identifier == 1 :
             # Create a one hot array for your labels

@@ -1,6 +1,6 @@
 import sys, os
 parent_dir = os.getcwd()
-sys.path.append("/Users/ronnyaretz/IPNeuronaleNetze")
+sys.path.append("/home/ip/IPNeuronaleNetze")
 
 import tensorflow as tf
 from models.dataloaders.DataLoader import DataLoader
@@ -22,21 +22,22 @@ class Trainer:
 	def training(self):
 
 		if self.identifier==1:
-			self.saved_model_path = "IPNeuronaleNetze/models/GenderWeights"
+			self.saved_model_path = "/home/ip/IPNeuronaleNetze/models/GenderWeights"
 		else:
-			self.saved_model_path = "IPNeuronaleNetze/models/AgeWeights"
+			self.saved_model_path = "/home/ip/IPNeuronaleNetze/models/AgeWeights"
 
 		dataLoader = DataLoader(self.filepath,self.identifier)		
 		images, labels = dataLoader.create_dataset()
 
 		validationDataLoader = DataLoader(self.validationfilepath, self.identifier)
-		valdata = dataLoader.create_dataset()
+		images_val, labels_val = validationDataLoader.create_dataset()
 		
 		callbacks = Cback()
 		callbacks = callbacks.makeCb()
 		
-		self.model.fit(x=images, y=labels, validation_data=valdata ,steps_per_epoch=25, epochs=125, callbacks=callbacks)			
+		self.model.fit(x=images, y=labels,validation_data=(images_val, labels_val), steps_per_epoch=4200, validation_steps=1500, epochs=64, callbacks=callbacks,shuffle = True)			
 		
-		tf.contrib.saved_model.save_keras_model(
-             self.model, self.saved_model_path, custom_objects=None, as_text=None)	
+	#	tf.contrib.saved_model.save_keras_model(
+        #     self.model, self.saved_model_path, custom_objects=None, as_text=None)	
+		self.model.save_weights("model_shuffle.h5")
 		return self.model
