@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import cv2 as cv
 
+
 img_1d = np.load('test2.out.npy')
 
 img_mat = img_1d.reshape(-224,224,3)
