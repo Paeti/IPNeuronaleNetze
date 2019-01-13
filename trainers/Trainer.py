@@ -8,6 +8,8 @@ from tensorflow import keras
 from tensorflow.python.keras import callbacks
 from models.optimizer.cb import Cback
 import json
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Trainer:
 	
@@ -27,15 +29,14 @@ class Trainer:
 			self.saved_model_path = "/home/ip/IPNeuronaleNetze/models/AgeWeights"
 
 		dataLoader = DataLoader(self.filepath,self.identifier)		
-		images, labels = dataLoader.create_dataset()
-
+		images, labels  = dataLoader.create_dataset()
 		validationDataLoader = DataLoader(self.validationfilepath, self.identifier)
-		images_val, labels_val = validationDataLoader.create_dataset()
+		images_val, labels_val = validationDataLoader.create_dataset()		
 		
 		callbacks = Cback()
 		callbacks = callbacks.makeCb()
 		
-		self.model.fit(x=images, y=labels,validation_data=(images_val, labels_val), steps_per_epoch=4200, validation_steps=1500, epochs=64, callbacks=callbacks,shuffle = True)			
+		self.model.fit(x= images, y = labels, validation_data=(images_val, labels_val), steps_per_epoch=100, validation_steps=35, epochs=10, callbacks=callbacks,shuffle = True)			
 		
 	#	tf.contrib.saved_model.save_keras_model(
         #     self.model, self.saved_model_path, custom_objects=None, as_text=None)	
