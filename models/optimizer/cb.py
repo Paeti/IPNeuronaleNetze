@@ -38,7 +38,7 @@ class Cback:
 				p.terminate() for p in processes if p.is_alive()])
 		
 
-		callback =[callbacks.EarlyStopping(monitor='loss', min_delta=0, patience=12, verbose=0, mode='auto', baseline=None), batch_print_callback,json_logging_callback]
+		callback =[callbacks.EarlyStopping(monitor='mean_absolute_error', min_delta=0, patience=8, verbose=0, mode='auto', baseline=None), batch_print_callback,json_logging_callback, cleanup_callback]
 		
 		return callback
 		
