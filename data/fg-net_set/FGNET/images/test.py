@@ -57,7 +57,7 @@ encoded_image_cv = base64.b64encode(img)
 print(type(encoded_image_cv))
 
 
-img = tf.reshape(img, [1, 224, 224, 3])  #ggf nicht noetig Kom1
+img = tf.reshape(img, [-1, 224, 224, 3])  #ggf nicht noetig Kom1
 
 sess = tf.Session()
 
