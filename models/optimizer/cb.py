@@ -1,9 +1,6 @@
 import sys, os
 parent_dir = os.getcwd()
-sys.path.append("/home/ip/IPNeuronaleNetze")
-import tensorflow as tf
-import tensorflow.python.keras 
-from models.dataloaders.DataLoader import DataLoader 
+sys.path.append(parent_dir)
 from tensorflow.python.keras import callbacks
 import json
 
@@ -38,7 +35,13 @@ class Cback:
 				p.terminate() for p in processes if p.is_alive()])
 		
 
-		callback =[callbacks.EarlyStopping(monitor='mean_absolute_error', min_delta=0, patience=8, verbose=0, mode='auto', baseline=None), batch_print_callback,json_logging_callback, cleanup_callback]
+		callback =[
+				callbacks.EarlyStopping(
+					monitor='mean_absolute_error', min_delta=0, 
+					patience=8, verbose=0, 
+					mode='auto', baseline=None), 
+				batch_print_callback, json_logging_callback, 
+				cleanup_callback]
 		
 		return callback
 		
