@@ -82,6 +82,16 @@
         function sendImage() {
             ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            var dataURL = canvas.toDataURL();
+            $.ajax({
+                type: "POST",
+                url: "../server.py",
+                data: { 
+                   image: dataURL
+                }
+              }).done(function(o) {
+                console.log('sent'); 
+              });
         };
 
         function changeUIToDefault() {
