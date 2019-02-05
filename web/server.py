@@ -1,6 +1,10 @@
 import os
 from flask import Flask, url_for, request, render_template, jsonify
 from werkzeug.utils import secure_filename
+from keras.applications.vgg16 import vgg16
+from keras.preprocessing import image
+from keras.applications.vgg16 import preprocess_input
+import numpy as np 
 
 UPLOAD_FOLDER = '/pictures'
 app = Flask(__name__)
@@ -27,7 +31,6 @@ def save():
         ID = request.form['ID']
         if save == False:
             deletePicture(ID)
-    return render_template('enddialog.html')
         
 def getPrediction(file):
     #send to dockercontainer, get result
