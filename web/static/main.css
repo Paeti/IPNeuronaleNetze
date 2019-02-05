@@ -1,0 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    font-size: 62.5%;
+    font-weight: 300;
+}
+
+.sectionWrapper {
+    height: 100vh;
+    background-image: linear-gradient(to right bottom, rgba(64, 190, 170, 1), rgba(64, 190, 170, 0.5)), url('background.jpg');
+    background-position: center;
+    background-size: cover;
+
+}
+
+.row {
+    position: relative;
+    top: 45%;
+    transform: translateY(-50%);
+    max-width: 114rem;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.webcam {
+    -webkit-box-shadow: 0 1rem 1.5rem rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1rem 1.5rem rgba(0, 0, 0, 0.15);
+}
+
+.card {
+    -webkit-perspective: 200rem;
+    perspective: 200rem;
+    position: relative;
+    height: 50rem;
+}
+
+.card__cta {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 80%;
+    text-align: center;
+}
+
+.card__side {
+    height: 50rem;
+    width: 100%;
+    -webkit-transition: all .8s ease;
+    transition: all .8s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.card__side--back {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+    -webkit-box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.15);
+    background-image: -webkit-gradient(linear, left top, right bottom, from(#40beaa), to(#40beaa));
+    background-image: linear-gradient(to right bottom, #000000c4, #00000091);
+}
+
+.card__side--back-heading {
+    font-size: 5rem;
+    font-weight: 100;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    background-image: linear-gradient(to right, rgb(151, 225, 213), rgba(148, 210, 199, 0.5));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 6rem;
+}
+
+.card__side--front.clicked {
+    -webkit-transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
+}
+
+.card__side--back.clicked {
+    -webkit-transform: rotateY(0);
+    transform: rotateY(0);
+}
+
+.predictionForm{
+    text-align: center;
+}
+
+.predictionForm__leftInput {
+    display: inline-block;
+}
+.predictionForm__rightInput {
+    display: inline-block;
+}
+
+.input {
+    border: none;
+    background-color:transparent;
+    padding: 0;
+    margin: 0;
+    display: block;
+    margin: 0 auto;
+    height: 3rem;
+    cursor: blink;
+    width: 100%;
+    font-size: 3rem;
+    text-align: center;
+    color: white;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+.label {
+    text-transform: uppercase;
+    font-size: 2rem;
+    background-image: linear-gradient(to right, rgb(151, 225, 213), rgba(148, 210, 199, 0.5));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.button:link,
+.button:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    border-radius: 10rem;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 115%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.button:hover {
+    -webkit-transform: translate(-50%, -54%);
+    transform: translate(-50%, -54%);
+    -webkit-box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+    -webkit-transform: translate(-50%, -52%);
+    transform: translate(-50%, -52%);
+    -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+.buttonWhite:link,
+.buttonWhite:visited {
+    background-color: #fff;
+    color: #777;
+    padding: 1.5rem 4rem;
+}

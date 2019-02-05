@@ -1,33 +1,103 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>IP Hartung</title>
+    <title>IP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="../static/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../static/main.css" />
 </head>
 
-<body onload="toggleFullScreen()">
-    <div id="bannerWrapper">
-        <h1 id="issaBiggerText">Drücken Sie Enter und lassen Sie Ihr Alter schätzen</h1>
-        <h2 id="issaSmallerText">und stimmen zu, dass ihr Bild für das Trainieren der
-            Software weiterverwendet wird.</h2>
-    </div>
-    <div id="wrapper">
-        <video autoplay id="webcam">
-        </video>
-    </div>
-    <div id="userForm">
-        <img src="../static/userForm.png" alt="">
-    </div>
-    <div id="heartLoader">
-        <div></div>
-    </div>
+<body>
 
-    <!-- height and width needs to get adpopted to the pixels of the webcam-->
-    <canvas id="canvas" height="1040px" width="1380px"></canvas>
-    <script src="../static/custom.js"></script>
+    <section class="sectionWrapper">
+        <div class="row">
+            <div class="card">
+                <div class="card card__side card__side--front">
+                    <video autoplay class="webcam"></video>
+                </div>
+                <div class="card card__side card__side--back">
+                    <div class="card__cta">
+                        <h1 class="card__side--back-heading">Deine Ergebnisse</h1>
+                        <form class="predictionForm" action="" method="post">
+                            <div class="predictionForm__leftInput">
+                                <input type="text" name="age" id="age" class="input" autofocus>
+                                <label class="label" for="age">Alter</label>
+                            </div>
+                            <div class="predictionForm__rightInput">
+                                <input type="text" name="gender" id="gender" class="input">
+                                <label class="label" for="gender">Geschlecht</label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="button buttonWhite">Lass dich Schätzen</a>
+        </div>
+    </section>
+    <script>
+        navigator.getUserMedia = (navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia);
+        var clicked = false;
+        var video;
+        var webcamStream;
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({
+                    video: true,
+                    audio: false
+                },
+                function (localMediaStream) {
+                    video = document.querySelector('video');
+                    try {
+                        video.srcObject = localMediaStream;
+                    } catch (error) {
+                        video.src = window.URL.createObjectURL(localMediaStream);
+                    }
+                    webcamStream = localMediaStream;
+                },
+                function (err) {
+                    console.log("The following error occured: " + err);
+                }
+            );
+        } else {
+            console.log("getUserMedia not supported");
+        }
+        document.querySelector('.button').addEventListener('click', function () {
+
+            if (clicked) {
+                changeUIToDefault();
+                sendForm();
+            } else {
+                changeUIToClicked();
+                sendImage();
+            }
+        });
+
+        function changeUIToDefault() {
+            var selectors;
+            selectors = document.querySelectorAll('.card__side');
+            selectors = Array.prototype.slice.call(selectors);
+            selectors.forEach(function (current, index) {
+                current.classList.remove('clicked');
+            });
+            document.querySelector('.button').innerHTML = 'lass dich schätzen';
+            clicked = false;
+        }
+
+        function changeUIToClicked() {
+            var selectors;
+            selectors = document.querySelectorAll('.card__side');
+            selectors = Array.prototype.slice.call(selectors);
+            selectors.forEach(function (current, index) {
+                current.className += ' clicked';
+            });
+            document.querySelector('.button').innerHTML = 'Neuer Versuch';
+            clicked = true;
+        }
+    </script>
 </body>
 
 </html>
