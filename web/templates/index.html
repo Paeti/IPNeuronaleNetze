@@ -36,6 +36,7 @@
             <a href="#" class="button buttonWhite">Lass dich Schätzen</a>
         </div>
     </section>
+    <canvas  id="canvas" width="400" height="350"></canvas>
     <script>
         navigator.getUserMedia = (navigator.getUserMedia ||
             navigator.webkitGetUserMedia ||
@@ -44,6 +45,8 @@
         var clicked = false;
         var video;
         var webcamStream;
+        var canvas = document.getElementById('canvas');
+        var ctx;
         if (navigator.getUserMedia) {
             navigator.getUserMedia({
                     video: true,
@@ -75,6 +78,11 @@
                 sendImage();
             }
         });
+
+        function sendImage() {
+            ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        };
 
         function changeUIToDefault() {
             var selectors;
