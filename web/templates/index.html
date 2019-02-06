@@ -7,6 +7,7 @@
     <title>IP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="../static/main.css" />
+
 </head>
 
 <body>
@@ -36,7 +37,7 @@
             <a href="#" class="button buttonWhite">Lass dich Schätzen</a>
         </div>
     </section>
-    <canvas  id="canvas" width="400" height="350"></canvas>
+    <canvas id="canvas" width="400" height="350"></canvas>
     <script>
         navigator.getUserMedia = (navigator.getUserMedia ||
             navigator.webkitGetUserMedia ||
@@ -85,13 +86,21 @@
             var dataURL = canvas.toDataURL();
             $.ajax({
                 type: "POST",
+                dataType: "json",
                 url: "../server.py",
-                data: { 
-                   image: dataURL
+                data: {
+                    image: dataURL
+                },
+                success: function(data) {
+                    var json = $.parseJSON(data);
+                    document.querySelector("#age").value = json.age;
+                    document.querySelector("#gender").value = json.value;
                 }
-              }).done(function(o) {
-                console.log('sent'); 
-              });
+            });
+        };
+
+        function sendForm() {
+
         };
 
         function changeUIToDefault() {
