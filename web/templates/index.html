@@ -91,10 +91,10 @@
                 data: {
                     image: dataURL
                 },
-                success: function(data) {
+                success: function (data) {
                     var json = $.parseJSON(data);
-                    document.querySelector("#age").value = json.age;
-                    document.querySelector("#gender").value = json.value;
+                    crypticWow(json.age, document.querySelector("#age"));
+                    crypticWow(json.gender, document.querySelector("#gender"));
                 }
             });
         };
@@ -124,6 +124,27 @@
             document.querySelector('.button').innerHTML = 'Neuer Versuch';
             clicked = true;
         }
+
+        function crypticWow(data, location) {
+            setTimeout(function () {
+                var logoRandom = '';
+                var possible = "-+*/|}{[]~:;?/.><=+-_)(*&^%$#@!)}...";
+                for (var i = 0; i < data.length + 1; i++) {
+                    logoRandom = data.substr(0, i);
+                    for (var j = i; j < data.length; j++) {
+                        logoRandom += possible.charAt(Math.floor(Math.random() * possible.length));
+                    }
+                    generateRandomTitle(i, logoRandom, location);
+                    logoRandom = '';
+                }
+
+                function generateRandomTitle(i, logoRandom, location) {
+                    setTimeout(function () {
+                        location.value = logoRandom;
+                    }, i * 50);
+                }
+            }, 100);
+        };
     </script>
 </body>
 
