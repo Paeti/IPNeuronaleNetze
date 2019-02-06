@@ -1,56 +1,37 @@
-import sys, os
-parent_dir = os.getcwd()
-sys.path.append("/home/ip/IPNeuronaleNetze")
-sys.path.append("/home/ip/IPNeuronaleNetze/trainers")
+import sys
+sys.path.append("/IPNeuronaleNetze")
+sys.path.append("/IPNeuronaleNetze/trainers")
 import tensorflow as tf
-
-from models.optimizer.LR_SGD import LR_SGD
 from models.OurModel import OurModel
-from models.dataloaders.DataLoader import DataLoader
 from Trainer import Trainer
 
-#filepathGender = "/home/ip/IPNeuronaleNetze/data/gender.tfrecords"
-#filepathGendervalidation = "/home/ip/IPNeuronaleNetze/data/validationgender.tfrecords"
-
-#filepathAge = "/home/ip/IPNeuronaleNetze/data/lap_train.tfrecords"
-#filepathAgevalidation = "/home/ip/IPNeuronaleNetze/data/lap_valid.tfrecords"
-
-filepathAge = "/home/ip/IPNeuronaleNetze/data/LAP/Train"
-filepathAgevalidation = "/home/ip/IPNeuronaleNetze/data/LAP/Valid"
-filepathAgetest = "/home/ip/IPNeuronaleNetze/data/LAP/Test"
-
-imdb_age_test = "/home/ip/IPNeuronaleNetze/data/IMDB/age/test"
-imdb_age_train= "/home/ip/IPNeuronaleNetze/data/IMDB/age/train"
-imdb_age_val  = "/home/ip/IPNeuronaleNetze/data/IMDB/age/val"
-
-imdb_gender_test = "/home/ip/IPNeuronaleNetze/data/IMDB/gender/test"
-imdb_gender_train= "/home/ip/IPNeuronaleNetze/data/IMDB/gender/train"
-imdb_gender_val  = "/home/ip/IPNeuronaleNetze/data/IMDB/gender/val"
-
-
-
+# Please enter the filepath to your dataset. 
+filepath_age = "/IPNeuronaleNetze/data/"
+filepath_gender = "/IPNeuronaleNetze/data/"
 
 def main():
+    # This main will start the training for both, age as well as gender estimation
+    # with the default amount of epochs with the value 312 and an early stopping callback with the patience of 4.    
+    # You can change the amount of epochs by typing "epochs = X" into the Trainer constructor.
+    # If you want to train a model by loading the weights of an allready trained model, 
+    # use the load_model method from the OurModel class.     
 
-    #IMDB Dataset
-    #-------------------------------------------------------------------------------------------
+    # After the training is done, the models will be saved and evulation files (.csv) will be created.
+    # Use the parsers to interpret the .csv files
+
+    # Start training for age estimation              
+    AgeModel = OurModel(0)
+    AgeModel = Trainer(AgeModel.model, filepath_age + "Train",
+                        filepath_age + "Valid", filepath_age + "Test",
+                        identifier = 0)
+    AgeModel.train()
+
+    # Start training for gender estimation
     GenderModel = OurModel(1)
-    GenderModel = Trainer(GenderModel.model, imdb_gender_train, imdb_gender_val, imdb_gender_test, 1)
-
-    #AgeModel = OurModel(0)
-    #AgeModel = Trainer(AgeModel.model, imdb_age_train, imdb_age_val, imdb_age_test,0)
-
-
-
-    #LAP Dataset	
-    #-------------------------------------------------------------------------------------------
-    #AgeModel = OurModel(0)
-    #AgeModel  = Trainer(AgeModel.model, filepathAge, filepathAgevalidation, filepathAgetest, 0)
-
-    
-     
-
-
+    GenderModel = Trainer(GenderModel.model, filepath_gender + "Train",
+                            filepath_gender + "Valid", filepath_gender + "Test",
+                            identifier = 1)
+    GenderModel.train()
 
 if __name__ == "__main__":
     main()
