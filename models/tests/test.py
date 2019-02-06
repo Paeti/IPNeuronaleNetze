@@ -1,52 +1,61 @@
 import sys, os
-parent_dir = os.getcwd()
-sys.path.append("/Users/ronnyaretz/IPNeuronaleNetze")
-sys.path.append("/Users/ronnyaretz/IPNeuronaleNetze/trainers")
-import tensorflow as tf
-import numpy as np
-from models.optimizer.LR_SGD import LR_SGD
+sys.path.append("/home/ip/IPNeuronaleNetze")
+sys.path.append("/home/ip/IPNeuronaleNetze/trainers")
 from models.OurModel import OurModel
-from models.dataloaders.DataLoader import DataLoader
 from Trainer import Trainer
+import tensorflow as tf
 
-filepathGender = "IPNeuronaleNetze/data/gender.tfrecords"
-filepathGendervalidation = "IPNeuronaleNetze/data/validationgender.tfrecords"
-
-filepathAge = "IPNeuronaleNetze/data/age.tfrecords"
-filepathAgevalidation = "IPNeuronaleNetze/data/validationage.tfrecords"
+# Please enter filepath to the dataset for unittests
+# Take in mind to choose a small one. Due to tf.test.TestCase class the single 
+# trainingsteps will take longer than normal
+filepath = "/home/ip/IPNeuronaleNetze/data/LAP/"
 
 class modelTest(tf.test.TestCase):
 
-    # Test whether weights files get created after training
-    def test_weights_get_saved(self):
+    # Test whether saved model file will be created after training
+    def test_model_get_saved(self):
         with self.test_session():
-            stored = True
-            GenderModelWeights = "IPNeuronaleNetze/models/weights/GenderModel_weights.h5"
-            GenderModel = OurModel(1, filepathGender)
-            GenderModel = Trainer(GenderModel.model, filepathGender, 1)
-            with open(GenderModelWeights) as weightsfile:
-                first = weightsfile.read(1)
-                if not first:
-                    stored = False            
+            model = OurModel(0)
+            trainer = Trainer(model.model,filepath + "Train", 
+                                filepath + "Valid", filepath + "Test", 
+                                identifier = 0, epochs = 1, 
+                                save_model = True)
+            trainer.train()
+            self.assertEqual(True,os.path.exists(trainer.saved_model_path))
 
-            AgeModelWeights = "IPNeuronaleNetze/models/weights/AgeModel_weights.h5"
-            AgeModel = OurModel(0, filepathAge)
-            AgeModel = Trainer(AgeModel.model, filepathAge, 0)
-            with open(AgeModelWeights) as weightsfile:
-                first = weightsfile.read(1)
-                if not first:
-                    stored = False
-                
-            self.assertEqual(True, stored)
+    # Test whether model will be saved and loaded properly
+    def test_model_get_saved_and_loaded_correctly(self):
+                with self.test_session():
+                        model = OurModel(0)
+                        trainer = Trainer(model.model,filepath + "Valid",
+                                filepath + "Valid", filepath + "Valid",
+                                identifier = 0, epochs = 1,
+                                save_model = True)
+                        trainer.train()
+                        model_load = OurModel(0)
+                        model_load.load_model(trainer.saved_model_path, 0)
+                        a = trainer.model.get_weights()
+                        b = model_load.model.get_weights()
+                        equal = True
+                        while len(a) != 0:
+                                c = a.pop()
+                                d = b.pop()
+                                if(c != d).any():
+                                        equal = False
+                        self.assertEqual(True,equal)
 
-    # Test whether the Model weights are changed after training with one step
+    # Test whether the weigts are changed after one step of training
     def test_one_training_step(self):
-        with self.test_session():            
-            model = OurModel(1, filepathGender) 
-            a = model.model.get_weights()         
-            trainer = Trainer(model.model,filepathGender , 1) 
-            b = trainer.model.get_weights()   
-            same = True         
+        with self.test_session():
+            model = OurModel(0)
+            a = model.model.get_weights()
+            trainer = Trainer(model.model,filepath + "Train",
+                                filepath + "Valid", filepath + "Test",
+                                identifier = 0, epochs = 1,
+                                save_model = False)
+            trainer = trainer.train()
+            b = trainer.get_weights()      
+            same = True
             while len(a) != 0:
                 c = a.pop()
                 d = b.pop()
@@ -55,51 +64,37 @@ class modelTest(tf.test.TestCase):
             self.assertEqual(False, same)
 
     # Test whether all of the layers of a model are trainable, except the input layers
-    def test_Model_layers_allTrainable(self):
+    def test_model_layers_allTrainable(self):
         with self.test_session():
-            GenderModel = OurModel(1, filepathGender)
+            GenderModel = OurModel(1)
             trainable = True
-            for layer in GenderModel.model.layers:                
-                if layer.trainable != True and layer.name != 'input_1':
-                    trainable = False
-            AgeModel = OurModel(0, filepathAge)
-            for layer in AgeModel.model.layers:
-                if layer.trainable != True  and layer.name != 'input_3':
-                    trainable = False
-            self.assertEqual(trainable, True)         
-
-    # Test wether the models layer length are in expected manner
-    def test_GenderModel_layerLength(self):
-        with self.test_session():
-            GenderModel = OurModel(1, filepathGender)                     
-            length=0            
             for layer in GenderModel.model.layers:
-                length = length+1 
-            self.assertEqual(length,23)
-
-    # Test wether the models layer length are in expected manner
-    def test_AgeModel_layerLength(self):
-        with self.test_session():
-            AgeModel = OurModel(0, filepathAge)
-            length = 0
+                if layer.trainable != True:
+                    trainable = False
+            AgeModel = OurModel(0)
             for layer in AgeModel.model.layers:
-                length = length+1 
-            self.assertEqual(length,23)
+                if layer.trainable != True:
+                    trainable = False
+            self.assertEqual(trainable, True)
 
-    # Test wether the loss of the models is not equal 0
-    def test_loss_AgeModel(self):
-        with self.test_session():
-            GenderModel = OurModel(1, filepathGender) 
-            GenderModel = Trainer(GenderModel.model, filepathGender, 1)            
-            self.assertNotEqual(GenderModel.model.loss,0)
-    
-    # Test wether the loss of the models is not equal 0
-    def test_loss_GenderModel(self):
-        with self.test_session():
-            AgeModel = OurModel(0, filepathAge) 
-            AgeModel = Trainer(AgeModel.model, filepathAge, 0)            
-            self.assertNotEqual(AgeModel.model.loss,0)
+    # Test whether Gendermodel is in expected shape
+    def test_Gendermodel_layerLength(self):                                                                                   
+        with self.test_session():                                                                                             
+            GenderModel = OurModel(1)                                                                                         
+            GenderModel.model.summary()                                                                                       
+            length=0
+            for layer in GenderModel.model.layers:                                                                            
+                length = length+1
+            self.assertEqual(length,24)  
 
+    # Test whether Gendermodel is in expected shape
+    def test_Agemodel_layerLength(self):                                                                                      
+        with self.test_session():                                                                                             
+            AgeModel = OurModel(0)                                                                               
+            length = 0
+            for layer in AgeModel.model.layers:                                                                               
+                length = length+1
+            self.assertEqual(length,24) 
 
 if __name__ == '__main__':
     tf.test.main() 

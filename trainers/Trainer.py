@@ -18,54 +18,55 @@ class Trainer:
             self.test_filepath = test_filepath
             self.epochs = epochs
             self.save_model = save_model
+	    
 
         def train(self):
-			# Set batchsize, the higher, the faster the training
-			# Steps per epoch will later then be calculated automatically by diving samples/batch_size
-            batch_size = 42
+		# Set batchsize, the higher, the faster the training
+		# Steps per epoch will later then be calculated automatically by diving samples/batch_size
+		batch_size = 42
 
-			# Set filepath where our model will be saved.
-			# Please add directory to this project in the beginning of the string
-			if self.identifier == 1:
-					self.saved_model_path = "/IPNeuronaleNetze/models/GenderWeights"
-					class_mode ='binary'
-			else:
-					self.saved_model_path = "/IPNeuronaleNetze/models/AgeWeights"                        
-					class_mode = 'categorical'
+		# Set filepath where our model will be saved.
+		# Please add directory to this project in the beginning of the string
+		if self.identifier == 1:
+				self.saved_model_path = "/IPNeuronaleNetze/models/GenderWeights"
+				class_mode ='binary'
+		else:
+				self.saved_model_path = "/IPNeuronaleNetze/models/AgeWeights"                        
+				class_mode = 'categorical'
 
-			# Load the datasets via ImageDataGenerator
-			datagen = ImageDataGenerator(preprocessing_function = preprocess_input)
+		# Load the datasets via ImageDataGenerator
+		datagen = ImageDataGenerator(preprocessing_function = preprocess_input)
 
-			train_generator = datagen.flow_from_directory(
-					self.filepath, target_size = (224,224),
-					batch_size=batch_size, class_mode = class_mode, 
-					shuffle = True)
+		train_generator = datagen.flow_from_directory(
+				self.filepath, target_size = (224,224),
+				batch_size=batch_size, class_mode = class_mode, 
+				shuffle = True)
 
-			validation_generator = datagen.flow_from_directory(
-					self.validation_filepath, target_size =(224,224),
-					batch_size = batch_size, class_mode = class_mode, 
-					shuffle = True)
+		validation_generator = datagen.flow_from_directory(
+				self.validation_filepath, target_size =(224,224),
+				batch_size = batch_size, class_mode = class_mode, 
+				shuffle = True)
 
-			# Load the callbacks, which are separated in a different class
-			callbacks = Cback()
-			callbacks = callbacks.makeCb() 
+		# Load the callbacks, which are separated in a different class
+		callbacks = Cback()
+		callbacks = callbacks.makeCb() 
 
-			# Start the training wit the fit_generator
-			history = self.model.fit_generator(
-					train_generator, steps_per_epoch = train_generator.samples/train_generator.batch_size,
-					validation_data=validation_generator, validation_steps = validation_generator.samples/validation_generator.batch_size, 
-					epochs = self.epochs ,callbacks = callbacks)                                                                             
+		# Start the training wit the fit_generator
+		history = self.model.fit_generator(
+				train_generator, steps_per_epoch = train_generator.samples/train_generator.batch_size,
+				validation_data=validation_generator, validation_steps = validation_generator.samples/validation_generator.batch_size, 
+				epochs = self.epochs ,callbacks = callbacks)                                                                             
 
-			# Save the model if demanded																												
-			if self.save_model == True:
-					self.saved_model_path = tf.contrib.saved_model.save_keras_model(                                      
-							self.model, self.saved_model_path, 
-							custom_objects=None, as_text=None)  
+		# Save the model if demanded																												
+		if self.save_model == True:
+				self.saved_model_path = tf.contrib.saved_model.save_keras_model(                                      
+						self.model, self.saved_model_path, 
+						custom_objects=None, as_text=None)  
 
-			# Evaluate the trained model
-			self.evaluate(self.test_filepath)   
+		# Evaluate the trained model
+		self.evaluate(self.test_filepath)   
 
-			return self.model
+		return self.model
                                                                                                                               
                                                                                                                               
         def evaluate(self, test_filepath, name = "evaluation"):
