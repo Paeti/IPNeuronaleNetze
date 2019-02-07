@@ -55,9 +55,11 @@ def save():
 def getPrediction(x):
     
     #headers = {"content-type": "application/json"}
-    #json_response = requests.post('http://localhost:8501/v1/models/our_Model:predict', data=x, headers=headers)
-    #predictions = json.loads(json_response.text)['predictions']
-
+    #age = requests.post('http://localhost:8501/v1/models/#age_model:predict', data=x, headers=headers)
+    #gender = requests.post('http://localhost:8501/v1/models/#gender_model:predict', data=x, headers=headers)
+    #age_prediction = json.loads(age.text)['predictions']
+    #gender_prediction = json.loads(gender.text)['predictions']
+    #(age, gender) = age_prediction, gender_prediction
     (age, gender) = 38, "M"
     return (age, gender)
 
