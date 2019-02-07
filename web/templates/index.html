@@ -30,7 +30,7 @@
                                 <input type="text" name="gender" id="gender" class="input">
                                 <label class="label" for="gender">Geschlecht</label>
                             </div>
-                            <div class="predictionForm__rightInput">
+                            <div class="predictionForm__lowInput">
                                 <input type="checkbox" name="save" id="save" class="input">
                                 <label class="label" for="save">Bild sichern?</label>
                             </div>
@@ -41,7 +41,8 @@
             <a href="#" class="button buttonWhite">Lass dich Schätzen</a>
         </div>
     </section>
-    <canvas id="canvas" width="400" height="350"></canvas>
+    <!-- Canvasdimensions has to be the proportion of the Webcam -->
+    <canvas id="canvas" width="400" height="300"></canvas>
     <script src="../static/jquery-3.3.1.min.js"></script>
     <script>
         navigator.getUserMedia = (navigator.getUserMedia ||
@@ -54,6 +55,7 @@
         var canvas = document.getElementById('canvas');
         var ctx;
         var ID = 0;
+        // Enable Webcam
         if (navigator.getUserMedia) {
             navigator.getUserMedia({
                     video: true,
@@ -76,7 +78,6 @@
             console.log("getUserMedia not supported");
         }
         document.querySelector('.button').addEventListener('click', function () {
-
             if (clicked) {
                 changeUIToDefault();
                 sendForm();
@@ -110,7 +111,7 @@
             var age = document.getElementById("age").value;
             var gender = document.getElementById("gender").value;
             var checkbox = document.getElementById('save');
-            if (checkbox.checked){
+            if (checkbox.checked) {
                 saved = 1;
             }
             $.ajax({
@@ -124,6 +125,7 @@
                     gender: gender
                 },
                 success: function (data) {
+                    console.log('success');
                 }
             });
         };
@@ -149,27 +151,6 @@
             document.querySelector('.button').innerHTML = 'Neuer Versuch';
             clicked = true;
         }
-
-        function crypticWow(data, location) {
-            setTimeout(function () {
-                var logoRandom = '';
-                var possible = "-+*/|}{[]~:;?/.><=+-_)(*&^%$#@!)}...";
-                for (var i = 0; i < data.length + 1; i++) {
-                    logoRandom = data.substr(0, i);
-                    for (var j = i; j < data.length; j++) {
-                        logoRandom += possible.charAt(Math.floor(Math.random() * possible.length));
-                    }
-                    generateRandomTitle(i, logoRandom, location);
-                    logoRandom = '';
-                }
-
-                function generateRandomTitle(i, logoRandom, location) {
-                    setTimeout(function () {
-                        location.value = logoRandom;
-                    }, i * 50);
-                }
-            }, 100);
-        };
     </script>
 </body>
 

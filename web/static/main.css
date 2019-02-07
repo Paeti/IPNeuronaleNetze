@@ -117,6 +117,10 @@ body {
     display: inline-block;
 }
 
+.predictionForm__lowInput {
+    margin-top: 4rem;
+}
+
 .input {
     border: none;
     background-color: transparent;
