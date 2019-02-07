@@ -85,7 +85,6 @@
             ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             var dataURL = canvas.toDataURL("image/png");
-            console.log(dataURL)
             $.ajax({
                 type: "POST",
                 dataType: "json",
@@ -94,9 +93,13 @@
                     image: dataURL
                 },
                 success: function (data) {
-                    var json = $.parseJSON(data);
+                    console.log(data);
+                    /*var json = $.parseJSON(data);
                     crypticWow(json.age, document.querySelector("#age"));
-                    crypticWow(json.gender, document.querySelector("#gender"));
+                    crypticWow(json.gender, document.querySelector("#gender"));*/
+                    
+                    document.getElementById('age').placeholder = data.age;
+                    document.getElementById('gender').placeholder = data.gender;
                 }
             });
         };

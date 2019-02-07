@@ -1,6 +1,4 @@
-import os, sys, base64, re, time
-from PIL import Image
-from io import BytesIO
+import os, sys, base64, re
 from flask import Flask, url_for, request, render_template, jsonify
 from werkzeug.utils import secure_filename
 from keras.applications.vgg16 import vgg16
@@ -24,19 +22,16 @@ def index():
 def prediction():
     if request.method == 'POST':
         base64String = request.form['image']
-        """imageBinary = base64.b64decode(base64String + "===")
+        base64String += "==="
         ID = getNextID()
         img_path = os.getcwd()+ "\\bilder\\"+ str(ID) +"_.png"
-
         with open(img_path, 'wb') as f:
-            f.write(imageBinary)
+            f.write(base64.decodestring(base64String.split(',')[1].encode()))
+
         img = image.load_img(img_path, target_size=(224, 224))
         x = image.img_to_array(img)
         x = np.expand_dims(x, axis=0)
-        x = preprocess_input(x)"""
-        ID = getNextID()
-        img_path = os.getcwd()+ "\\bilder\\"+ str(ID)
-        getI420FromBase64(base64String +"===",img_path)
+        x = preprocess_input(x)
 
         (age, gender) = getPrediction(x)
         return jsonify(age=age, gender=gender, id=ID)
@@ -61,7 +56,7 @@ def getPrediction(x):
     #filename = secure_filename(file.filename)
     #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     
-    (age, gender) = 10, 'M'
+    (age, gender) = 38, "M"
     return (age, gender)
 
 def getNextID():
@@ -73,11 +68,3 @@ def getNextID():
         if ID > nextID:
             nextID = ID
     return nextID + 1
-
-def getI420FromBase64(codec, image_path="c:\\"):
-    base64_data = re.sub('^data:image/.+;base64,', '', codec)
-    byte_data = base64.b64decode(base64_data)
-    image_data = BytesIO(byte_data)
-    img = Image.open(image_data)
-    t = time.time()
-    img.save(image_path + str(t) + '.png', "PNG")
