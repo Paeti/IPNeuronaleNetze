@@ -38,6 +38,7 @@
         </div>
     </section>
     <canvas id="canvas" width="400" height="350"></canvas>
+    <script src="../static/jquery-3.3.1.min.js"></script>
     <script>
         navigator.getUserMedia = (navigator.getUserMedia ||
             navigator.webkitGetUserMedia ||
@@ -83,11 +84,12 @@
         function sendImage() {
             ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            var dataURL = canvas.toDataURL();
+            var dataURL = canvas.toDataURL("image/png");
+            console.log(dataURL)
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                url: "../server.py",
+                url: "/prediction",
                 data: {
                     image: dataURL
                 },
