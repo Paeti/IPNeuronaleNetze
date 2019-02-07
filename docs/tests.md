@@ -21,7 +21,7 @@ Test cases:
     5. Test whether Gendermodel is in expected shape
         test_Gendermodel_layerLength 
 
-    6. Test whether Gendermodel is in expected shape
+    6. Test whether Agemodel is in expected shape
         test_Agemodel_layerLength
 
 Recommendation:
