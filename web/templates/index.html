@@ -30,6 +30,10 @@
                                 <input type="text" name="gender" id="gender" class="input">
                                 <label class="label" for="gender">Geschlecht</label>
                             </div>
+                            <div class="predictionForm__rightInput">
+                                <input type="checkbox" name="save" id="save" class="input">
+                                <label class="label" for="save">Bild sichern?</label>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -49,6 +53,7 @@
         var webcamStream;
         var canvas = document.getElementById('canvas');
         var ctx;
+        var ID = 0;
         if (navigator.getUserMedia) {
             navigator.getUserMedia({
                     video: true,
@@ -93,19 +98,34 @@
                     image: dataURL
                 },
                 success: function (data) {
-                    console.log(data);
-                    /*var json = $.parseJSON(data);
-                    crypticWow(json.age, document.querySelector("#age"));
-                    crypticWow(json.gender, document.querySelector("#gender"));*/
-                    
-                    document.getElementById('age').placeholder = data.age;
-                    document.getElementById('gender').placeholder = data.gender;
+                    document.getElementById('age').value = data.age;
+                    document.getElementById('gender').value = data.gender;
+                    ID = data.id;
                 }
             });
         };
 
         function sendForm() {
-
+            var saved = 0;
+            var age = document.getElementById("age").value;
+            var gender = document.getElementById("gender").value;
+            var checkbox = document.getElementById('save');
+            if (checkbox.checked){
+                saved = 1;
+            }
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/save",
+                data: {
+                    save: saved,
+                    ID: ID,
+                    age: age,
+                    gender: gender
+                },
+                success: function (data) {
+                }
+            });
         };
 
         function changeUIToDefault() {

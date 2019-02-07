@@ -1,4 +1,4 @@
-import os, sys, base64, re
+import os, sys, base64, re, requests
 from flask import Flask, url_for, request, render_template, jsonify
 from werkzeug.utils import secure_filename
 from keras.applications.vgg16 import vgg16
@@ -7,11 +7,9 @@ from keras.applications.vgg16 import preprocess_input
 import numpy as np 
 
 
-UPLOAD_FOLDER = '/pictures'
+UPLOAD_FOLDER = '/uploads'
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-#STYLE = url_for('static', filename='style.css')
 
 @app.route('/')
 def index():
@@ -24,7 +22,9 @@ def prediction():
         base64String = request.form['image']
         base64String += "==="
         ID = getNextID()
-        img_path = os.getcwd()+ "\\bilder\\"+ str(ID) +"_.png"
+
+        img_path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"+ str(ID) +"_.png"
+        print(img_path)
         with open(img_path, 'wb') as f:
             f.write(base64.decodestring(base64String.split(',')[1].encode()))
 
@@ -40,27 +40,29 @@ def prediction():
 def save():
     if request.method == 'POST':
         save = request.form['save']
+        save = int(save)
         ID = request.form['ID']
         age = request.form['age']
         gender = request.form['gender']
-        img_path = os.getcwd()+ "/bilder/"+ID+"_.jpg"
-        if save == False:
+        img_path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"+str(ID)+"_.png"
+        if save == 0:
             os.remove(img_path)
         else:
-            new_img_path = os.getcwd()+ "/bilder/"+ID+"_"+age+"_"+gender+".jpg"
+            new_img_path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"+str(ID)+"_"+str(age)+"_"+str(gender)+".png"
             os.rename(img_path, new_img_path)
         return jsonify(success=True)
         
 def getPrediction(x):
-    #send to dockercontainer, get result
-    #filename = secure_filename(file.filename)
-    #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     
+    #headers = {"content-type": "application/json"}
+    #json_response = requests.post('http://localhost:8501/v1/models/our_Model:predict', data=x, headers=headers)
+    #predictions = json.loads(json_response.text)['predictions']
+
     (age, gender) = 38, "M"
     return (age, gender)
 
 def getNextID():
-    path = os.getcwd()+ "/bilder"
+    path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"
     dirs = os.listdir(path)
     nextID = 0
     for file in dirs:
