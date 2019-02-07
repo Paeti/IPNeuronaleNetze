@@ -1,6 +1,29 @@
 # Documentation for the webserver and frontend
 
 ## Webserver
+Before you start the server, you have to install all the dependencies, that are requierd
+
+* To start the server go into the web directory and type in:
+    ```
+    set FLASK_APP=server.py 
+    flask run
+    ```
+
+* use the shown url: **localhost:5000**, and as you let your age and gender get predicted, you get your predictions shown in the front end. The taken pictures is saved in /data/production_img, with a unique id as png. 
+    --> Example: 5_.png
+
+* you can now adjust your age and gender in the front end, and if you tick the save box, the new parameters will be written into the pictures name --> 
+    Example: 5_45_M.png
+    Otherwise the picture will be deleted!
+
+### Technically
+* localhost:5000/ --> renders the index page,
+* the front end sends per ajax the taken picture back to: /prediciton,
+* /prediction takes care of saving the picture and gets the age and gender parameters,
+* the image gets preprocessed and converted to an array and is sent to the models, the models send the parameters back,
+* the parameters are sent back to the front end, 
+* a second ajax in the front end takes care of sending back the new parameters,
+* and the /save route either deletes the picture or adds the parameters to the name.
 
 ## Frontend
 * **The ratio of the Canvas has to be the proportions of the Webcam**, because otherwise the picture it takes will be stretched or compressed
