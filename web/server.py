@@ -55,12 +55,19 @@ def getPrediction(x):
     headers = {"content-type": "application/json"}
     data = json.dumps({"signature_name": "serving_default", "instances": x.tolist()})
     age_response = requests.post('http://localhost:8501/v1/models/Age:predict', data=data, headers=headers)
-    #gender_response = requests.post('http://localhost:8502/v1/models/Gender:predict', data=data, headers=headers)
+    gender_response = requests.post('http://localhost:8501/v1/models/Gender:predict', data=data, headers=headers)
+    
     age_prediction = json.loads(age_response.text)['predictions']
-    #gender_prediction = json.loads(gender_response.text)['predictions']
+    #print(age_prediction)
+    gender_prediction = json.loads(gender_response.text)['predictions']
+    print(gender_prediction)
+
     age = age_prediction[0].index(max(age_prediction[0]))
-    #if gender_prediction[0]
-    return (age, "M")#gender_prediction[0])
+    gender = "M"
+    if gender_prediction[0][0] < 0.5:
+        gender = "W"
+
+    return (age, gender)
 
 def getNextID():
     path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"
