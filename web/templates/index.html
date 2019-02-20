@@ -38,7 +38,7 @@
                     </div>
                 </div>
             </div>
-            <a href="#" class="button buttonWhite">Lass dich Schätzen</a>
+            <a href="#" id="button" class="button buttonWhite">Lass dich Schätzen</a>
         </div>
     </section>
     <!-- Canvasdimensions has to be the proportion of the Webcam -->
@@ -91,6 +91,8 @@
             ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             var dataURL = canvas.toDataURL("image/png");
+            document.getElementById('age').value = "...";
+            document.getElementById('gender').value = "...";
             $.ajax({
                 type: "POST",
                 dataType: "json",
@@ -102,6 +104,8 @@
                     document.getElementById('age').value = data.age;
                     document.getElementById('gender').value = data.gender;
                     ID = data.id;
+                    document.getElementById("button").style.display = "inline";
+                    document.querySelector('.card__side--back-heading').innerHTML = 'Deine Ergebnisse:';
                 }
             });
         };
@@ -137,7 +141,7 @@
             selectors.forEach(function (current, index) {
                 current.classList.remove('clicked');
             });
-            document.querySelector('.button').innerHTML = 'lass dich schätzen';
+            document.querySelector('.button').innerHTML = 'Lass dich schätzen';
             clicked = false;
         }
 
@@ -148,6 +152,8 @@
             selectors.forEach(function (current, index) {
                 current.className += ' clicked';
             });
+            document.querySelector('.card__side--back-heading').innerHTML = 'Warten Sie kurz...';
+            document.getElementById("button").style.display = "none";
             document.querySelector('.button').innerHTML = 'Neuer Versuch';
             clicked = true;
         }

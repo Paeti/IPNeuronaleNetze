@@ -1,4 +1,4 @@
-import os, sys, base64, re, requests
+import os, sys, base64, re, requests, json
 from flask import Flask, url_for, request, render_template, jsonify
 from werkzeug.utils import secure_filename
 from keras.applications.vgg16 import vgg16
@@ -24,7 +24,6 @@ def prediction():
         ID = getNextID()
 
         img_path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"+ str(ID) +"_.png"
-        print(img_path)
         with open(img_path, 'wb') as f:
             f.write(base64.decodestring(base64String.split(',')[1].encode()))
 
@@ -53,15 +52,15 @@ def save():
         return jsonify(success=True)
         
 def getPrediction(x):
-    
-    #headers = {"content-type": "application/json"}
-    #age = requests.post('http://localhost:8501/v1/models/#age_model:predict', data=x, headers=headers)
-    #gender = requests.post('http://localhost:8501/v1/models/#gender_model:predict', data=x, headers=headers)
-    #age_prediction = json.loads(age.text)['predictions']
-    #gender_prediction = json.loads(gender.text)['predictions']
-    #(age, gender) = age_prediction, gender_prediction
-    (age, gender) = 38, "M"
-    return (age, gender)
+    headers = {"content-type": "application/json"}
+    data = json.dumps({"signature_name": "serving_default", "instances": x.tolist()})
+    age_response = requests.post('http://localhost:8501/v1/models/Age:predict', data=data, headers=headers)
+    #gender_response = requests.post('http://localhost:8502/v1/models/Gender:predict', data=data, headers=headers)
+    age_prediction = json.loads(age_response.text)['predictions']
+    #gender_prediction = json.loads(gender_response.text)['predictions']
+    age = age_prediction[0].index(max(age_prediction[0]))
+    #if gender_prediction[0]
+    return (age, "M")#gender_prediction[0])
 
 def getNextID():
     path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"
