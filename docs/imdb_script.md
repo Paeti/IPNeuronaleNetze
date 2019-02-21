@@ -25,10 +25,7 @@
    * creates array **Y_age** for the appropriate information about the age of the person on the image at the same position in X
    * creates array **Y_gender** for the appropriate information about the gender
    * You can **set the number of images** for the training (here 75% of all saved images in I) and validationset (here 20% of all saved images in I) yourself with size_training and size_val. The used values are recommended
-
-```
-5. Method: write_tfrecord(datasetX, datasetY, t)
+5. Method: **write_tfrecord(datasetX, datasetY, t)**
    * writes image and the information about it info tfrecord file so tensorflow can work with it
-  Script
-   * creates tfrecord files for age and gender sets for each dataset 
-```
+   Script
+   * creates tfrecord files for age and gender sets for each dataset
