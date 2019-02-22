@@ -6,9 +6,9 @@ RUN apt-get update -y && apt-get install -y \
   python-dev \
   build-essential
 
-COPY . /app
+COPY . /ip/app
 
-WORKDIR /app
+WORKDIR /ip/app
 
 RUN pip install -r requirements.txt
 

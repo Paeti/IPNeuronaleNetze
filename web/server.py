@@ -1,9 +1,8 @@
 import os, sys, base64, re, requests, json
 from flask import Flask, url_for, request, render_template, jsonify
 from werkzeug.utils import secure_filename
-from keras.applications.vgg16 import vgg16
+from keras.applications.vgg16 import vgg16, preprocess_input
 from keras.preprocessing import image
-from keras.applications.vgg16 import preprocess_input
 import numpy as np 
 
 
@@ -21,6 +20,7 @@ def prediction():
     if request.method == 'POST':
         base64String = request.form['image']
         base64String += "==="
+        print(os.getcwd())
         ID = getNextID()
 
         img_path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"+ str(ID) +"_.png"
@@ -52,22 +52,23 @@ def save():
         return jsonify(success=True)
         
 def getPrediction(x):
-    headers = {"content-type": "application/json"}
-    data = json.dumps({"signature_name": "serving_default", "instances": x.tolist()})
-    age_response = requests.post('http://localhost:8501/v1/models/Age:predict', data=data, headers=headers)
-    gender_response = requests.post('http://localhost:8501/v1/models/Gender:predict', data=data, headers=headers)
+    # headers = {"content-type": "application/json"}
+    # data = json.dumps({"signature_name": "serving_default", "instances": x.tolist()})
+    # age_response = requests.post('http://localhost:9000/v1/models/Age:predict', data=data, headers=headers)
+    # gender_response = requests.post('http://localhost:9001/v1/models/Gender:predict', data=data, headers=headers)
     
-    age_prediction = json.loads(age_response.text)['predictions']
-    #print(age_prediction)
-    gender_prediction = json.loads(gender_response.text)['predictions']
-    print(gender_prediction)
+    # age_prediction = json.loads(age_response.text)['predictions']
+    # #print(age_prediction)
+    # gender_prediction = json.loads(gender_response.text)['predictions']
+    # #print(gender_prediction)
 
-    age = age_prediction[0].index(max(age_prediction[0]))
-    gender = "M"
-    if gender_prediction[0][0] < 0.5:
-        gender = "W"
+    # age = age_prediction[0].index(max(age_prediction[0]))
+    # gender = "M"
+    # if gender_prediction[0][0] < 0.5:
+    #     gender = "W"
 
-    return (age, gender)
+    # return (age, gender)
+    return (100, "T")
 
 def getNextID():
     path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"
@@ -78,3 +79,6 @@ def getNextID():
         if ID > nextID:
             nextID = ID
     return nextID + 1
+
+if __name__ == '__main__':
+    app.run(threaded=True, host='0.0.0.0')

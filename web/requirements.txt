@@ -1,2 +1,8 @@
-Flask==0.10.1
-Flask-Testing==0.6.2
+Flask==1.0.2
+Werkzeug==0.14.1
+tensorflow==1.12.0
+Keras==2.2.4
+Keras-Applications==1.0.6
+Keras-Preprocessing==1.0.5
+numpy==1.15.4
+requests==2.21.0
