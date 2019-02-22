@@ -1,7 +1,7 @@
 The "*datasets.py*" file is a class which implements useful methods
 to process files from a given dataset.
 
-'''
+```
 * def createFolder(self, directory):
 	creates a Folder at __directory__
 
@@ -24,6 +24,6 @@ files into target_extract_directory
 	loads  FGNET dataset images from __image_directory__ and finds the corresponding age from the image name.
 	These images are randomly written into either Train, Test, Valid Classification folder and further into the folders of the corresponding age
 
-'''
+```
 
 To add a new dataset, just write a new method readAndPrintDataImagesXXX
