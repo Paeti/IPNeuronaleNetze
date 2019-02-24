@@ -33,7 +33,7 @@ to process files from a given dataset.
 
 Example
 
-'''
+```
 dataset = Dataset()
 dataset.createFolder("../data/classification/age")
 dataset.createClassificationFolders("../data/classification/age/Train")
@@ -52,6 +52,6 @@ dataset.readAndPrintDataImagesFGNET("../data/FGNET", "../data/classification")
 dataset.downloadAndUnpack("https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/static/imdb"
                          "_crop.tar", "../data/imdb_crop.tar", "../data/imdb_crop");
 dataset.readAndPrintDataImagesIMDB('imdb_metadata.csv', "../data/imdb_crop", "../data/classification")
-'''
+```
 
 To add a new dataset, just write a new method readAndPrintDataImagesXXX
