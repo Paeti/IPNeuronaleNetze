@@ -20,10 +20,9 @@ def prediction():
     if request.method == 'POST':
         base64String = request.form['image']
         base64String += "==="
-        print(os.getcwd())
+        # print("hallo")
         ID = getNextID()
-
-        img_path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"+ str(ID) +"_.png"
+        img_path = os.path.dirname(os.getcwd())+ "/data/production_img/"+ str(ID) +"_.png"
         with open(img_path, 'wb') as f:
             f.write(base64.decodestring(base64String.split(',')[1].encode()))
 
@@ -43,35 +42,35 @@ def save():
         ID = request.form['ID']
         age = request.form['age']
         gender = request.form['gender']
-        img_path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"+str(ID)+"_.png"
+        img_path = os.path.dirname(os.getcwd())+ "/data/production_img/"+str(ID)+"_.png"
         if save == 0:
             os.remove(img_path)
         else:
-            new_img_path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"+str(ID)+"_"+str(age)+"_"+str(gender)+".png"
+            new_img_path = os.path.dirname(os.getcwd())+ "/data/production_img/"+str(ID)+"_"+str(age)+"_"+str(gender)+".png"
             os.rename(img_path, new_img_path)
         return jsonify(success=True)
         
 def getPrediction(x):
-    # headers = {"content-type": "application/json"}
-    # data = json.dumps({"signature_name": "serving_default", "instances": x.tolist()})
-    # age_response = requests.post('http://localhost:9000/v1/models/Age:predict', data=data, headers=headers)
-    # gender_response = requests.post('http://localhost:9001/v1/models/Gender:predict', data=data, headers=headers)
+    headers = {"content-type": "application/json"}
+    data = json.dumps({"signature_name": "serving_default", "instances": x.tolist()})
+    age_response = requests.post('http://localhost:8502/v1/models/Age:predict', data=data, headers=headers)
+    gender_response = requests.post('http://localhost:8503/v1/models/Gender:predict', data=data, headers=headers)
     
-    # age_prediction = json.loads(age_response.text)['predictions']
-    # #print(age_prediction)
-    # gender_prediction = json.loads(gender_response.text)['predictions']
-    # #print(gender_prediction)
+    age_prediction = json.loads(age_response.text)['predictions']
+    # print(age_prediction)
+    gender_prediction = json.loads(gender_response.text)['predictions']
+    # print(gender_prediction)
 
-    # age = age_prediction[0].index(max(age_prediction[0]))
-    # gender = "M"
-    # if gender_prediction[0][0] < 0.5:
-    #     gender = "W"
+    age = age_prediction[0].index(max(age_prediction[0]))
+    gender = "M"
+    if gender_prediction[0][0] < 0.5:
+        gender = "W"
 
-    # return (age, gender)
-    return (100, "T")
+    return (age, gender)
+    # return (100, "T")
 
 def getNextID():
-    path = os.path.dirname(os.getcwd())+ "\\data\\production_img\\"
+    path = os.path.dirname(os.getcwd())+ "/data/production_img"
     dirs = os.listdir(path)
     nextID = 0
     for file in dirs:
@@ -81,4 +80,4 @@ def getNextID():
     return nextID + 1
 
 if __name__ == '__main__':
-    app.run(threaded=True, host='0.0.0.0')
+    app.run(threaded=True, host='0.0.0.0', debug=True)

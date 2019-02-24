@@ -1,22 +1,17 @@
-version: '3'
+version: '3.3'
 
 services:
-  age-model-service:
+  model-service:
     image: tensorflow/serving:latest
     volumes:
       - ./models_production/models/Age:/models/Age
-    ports:
-      - 8502:8501
-    environment:
-      - MODEL_NAME=Age
-  gender-model-service:
-    image: tensorflow/serving:latest
-    volumes:
       - ./models_production/models/Gender:/models/Gender
+      #- ./models_production/config/config.conf:/config/config.conf
     ports:
-      - 8503:8501
-    environment:
-      - MODEL_NAME=Gender
+      - 8500:8500
+      - 8501:8501
+    configs:
+      - model_config_file
   web-service:
     build: ./web
     volumes:
@@ -25,5 +20,7 @@ services:
     ports:
       - 5001:5000
     depends_on:
-      - age-model-service
-      - gender-model-service
+      - model-service
+configs:
+  model_config_file:
+    file: ./models_production/config/config.conf
