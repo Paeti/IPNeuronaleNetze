@@ -3,7 +3,7 @@ from flask import Flask, url_for, request, render_template, jsonify
 from werkzeug.utils import secure_filename
 from keras.applications.vgg16 import vgg16, preprocess_input
 from keras.preprocessing import image
-import numpy as np 
+import numpy as np
 
 
 UPLOAD_FOLDER = '/uploads'
@@ -49,13 +49,13 @@ def save():
             new_img_path = os.path.dirname(os.getcwd())+ "/data/production_img/"+str(ID)+"_"+str(age)+"_"+str(gender)+".png"
             os.rename(img_path, new_img_path)
         return jsonify(success=True)
-        
+
 def getPrediction(x):
     headers = {"content-type": "application/json"}
     data = json.dumps({"signature_name": "serving_default", "instances": x.tolist()})
-    age_response = requests.post('http://localhost:8502/v1/models/Age:predict', data=data, headers=headers)
-    gender_response = requests.post('http://localhost:8503/v1/models/Gender:predict', data=data, headers=headers)
-    
+    age_response = requests.post('http://age-model-service:8501/v1/models/Age:predict', data=data, headers=headers)
+    gender_response = requests.post('http://gender-model-service:8501/v1/models/Gender:predict', data=data, headers=headers)
+
     age_prediction = json.loads(age_response.text)['predictions']
     # print(age_prediction)
     gender_prediction = json.loads(gender_response.text)['predictions']
