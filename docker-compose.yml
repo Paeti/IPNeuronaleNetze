@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  age-model-service:
+    image: tensorflow/serving:latest
+    volumes:
+      - ./models_production/models/Age:/models/Age
+    ports:
+      - 8502:8501
+    environment:
+      - MODEL_NAME=Age
+  gender-model-service:
+    image: tensorflow/serving:latest
+    volumes:
+      - ./models_production/models/Gender:/models/Gender
+    ports:
+      - 8503:8501
+    environment:
+      - MODEL_NAME=Gender
+  web-service:
+    build: ./web
+    volumes:
+      - ./web:/web
+      - ./data:/data
+    ports:
+      - 5001:5000
