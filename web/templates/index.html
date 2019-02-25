@@ -79,10 +79,15 @@
         }
         document.querySelector('.button').addEventListener('click', function () {
             if (clicked) {
-		boolean = sendForm();
-		if boolean {
-			changeUIToDefault();
-		}
+                boolean = true;
+                success = sendForm();
+                if (success == false) {
+                    boolean = success;
+                }
+                console.log(boolean)
+                if (boolean) {
+                    changeUIToDefault();
+                }
             } else {
                 changeUIToClicked();
                 sendImage();
@@ -117,11 +122,10 @@
             var age = document.getElementById("age").value;
             var gender = document.getElementById("gender").value;
             var checkbox = document.getElementById('save');
-	    if (gender != "M" && gender != "W" || parseInt(age) < 0 || parseInt(age) > 100 )
-	    {
-		alert("Bitte schreiben Sie nur valide Dinge in das Form")
-	        return false	
-	    }
+            if (gender != "M" && gender != "W" || parseInt(age) <= 0 || parseInt(age) > 100 || parseInt(age) == undefined || parseInt(age) == NaN) {
+                alert("Bitte schreiben Sie nur valide Dinge in das Form")
+                return false
+            }
             if (checkbox.checked) {
                 saved = 1;
             }
@@ -137,7 +141,6 @@
                 },
                 success: function (data) {
                     console.log('success');
-		    return true
                 }
             });
         };
@@ -160,7 +163,7 @@
             selectors.forEach(function (current, index) {
                 current.className += ' clicked';
             });
-            document.querySelector('.card__side--back-heading').innerHTML = 'Warte bitte kurz...';
+            document.querySelector('.card__side--back-heading').innerHTML = 'Ihre Ergebnisse werden berechnet';
             document.getElementById("button").style.display = "none";
             document.querySelector('.button').innerHTML = 'Neuer Versuch';
             clicked = true;
