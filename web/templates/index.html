@@ -79,8 +79,10 @@
         }
         document.querySelector('.button').addEventListener('click', function () {
             if (clicked) {
-                changeUIToDefault();
-                sendForm();
+		boolean = sendForm();
+		if boolean {
+			changeUIToDefault();
+		}
             } else {
                 changeUIToClicked();
                 sendImage();
@@ -115,6 +117,11 @@
             var age = document.getElementById("age").value;
             var gender = document.getElementById("gender").value;
             var checkbox = document.getElementById('save');
+	    if (gender != "M" && gender != "W" || parseInt(age) < 0 || parseInt(age) > 100 )
+	    {
+		alert("Bitte schreiben Sie nur valide Dinge in das Form")
+	        return false	
+	    }
             if (checkbox.checked) {
                 saved = 1;
             }
@@ -130,6 +137,7 @@
                 },
                 success: function (data) {
                     console.log('success');
+		    return true
                 }
             });
         };
