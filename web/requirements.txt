@@ -7,3 +7,4 @@ Keras-Preprocessing==1.0.5
 numpy==1.15.4
 requests==2.21.0
 Pillow==5.3.0
+pyopenssl==19.0.0
