@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 class Dataset:
 
-    face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
+    face_cascade = cv.CascadeClassifier('../data/haarcascade_frontalface_default.xml')
 
     def createFolder(self, directory):
         try:
@@ -99,7 +99,16 @@ class Dataset:
         delta = 5
 
         for a in full_path2:
-            b = a.split('\\')
+           tmp_fix = ""
+           fix = a.split('/')
+        for idx, fix_1 in enumerate(fix):
+            tmp_fix = tmp_fix + fix_1
+            if idx == 4:
+                tmp_fix = tmp_fix + "\\"
+            elif idx < 5:
+                tmp_fix = tmp_fix + "/"
+        
+            b = tmp_fix.split('\\')
             full_path.append(b[1])
             b = b[1].split('.')
 
