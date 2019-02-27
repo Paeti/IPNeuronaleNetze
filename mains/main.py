@@ -45,14 +45,14 @@ def main():
     AgeModel = OurModel(0)
     AgeModel = Trainer(AgeModel.model, filepath_age + "Train",
                         filepath_age + "Valid", filepath_age + "Test",
-                        identifier = 0, epochs = 1)
+                        identifier = 0)
     AgeModel.train()
 
     # Start training for gender estimation
     GenderModel = OurModel(1)
     GenderModel = Trainer(GenderModel.model, filepath_gender + "Train",
                             filepath_gender + "Valid", filepath_gender + "Test",
-                            identifier = 1, epochs = 1)
+                            identifier = 1)
     GenderModel.train()
 
 if __name__ == "__main__":

@@ -38,7 +38,7 @@ def main():
     AgeModel = OurModel(0)
     AgeModel = Trainer(AgeModel.model, filepath + "Train",
                         filepath + "Valid", filepath + "Test",
-                        identifier = 0, epochs = 1)
+                        identifier = 0)
     AgeModel.train()
 
    
