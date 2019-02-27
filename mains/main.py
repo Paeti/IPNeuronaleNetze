@@ -44,8 +44,8 @@ def main():
     # Start training for age estimation
     AgeModel = OurModel(0)
     AgeModel = Trainer(AgeModel.model, filepath_age + "Train",
-    #                    filepath_age + "Valid", filepath_age + "Test",
-    #                    identifier = 0, epochs = 1)
+                        filepath_age + "Valid", filepath_age + "Test",
+                        identifier = 0, epochs = 1)
     AgeModel.train()
 
     # Start training for gender estimation
