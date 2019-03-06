@@ -1,6 +1,6 @@
 import unittest
 import flask_testing
-import urllib2
+import urllib.request as urllib2
 from flask import Flask
 from unittest import TestCase
 from flask_testing import LiveServerTestCase

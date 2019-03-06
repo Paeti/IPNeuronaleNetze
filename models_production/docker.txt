@@ -1,0 +1,4 @@
+docker run -p 8502:8501 --mount type=bind,source=C:/Users/Jonas/Documents/UNI/5_Semester/IP/models1/models/Age/,target=/models/Age -e MODEL_NAME=Age -t tensorflow/serving
+docker run -p 8503:8501 --mount type=bind,source=C:/Users/Jonas/Documents/UNI/5_Semester/IP/models1/models/Gender/,target=/models/Gender -e MODEL_NAME=Gender -t tensorflow/serving
+
+docker run -p 8500:8500 -p 8501:8501 --mount type=bind,source=C:/Users/Jonas/Documents/UNI/5_Semester/IP/models1/models/Age/,target=/models/Age --mount type=bind,source=C:/Users/Jonas/Documents/UNI/5_Semester/IP/models1/models/Gender/,target=/models/Gender --mount type=bind,source=C:/Users/Jonas/Documents/UNI/5_Semester/IP/models1/config/config.conf,target=/config/config.conf -t tensorflow/serving --model_config_file=/config/config.conf
