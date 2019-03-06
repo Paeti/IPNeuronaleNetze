@@ -13,7 +13,7 @@ filepath = "../data/classification/age/"
 
 def main():
     # This main will first load the datasets then start the training for both, age as well as gender estimation
-    # with the default amount of epochs which is the value 312 and an early stopping callback with the patience of 4 (after 4 ).
+    # with the default amount of epochs which is the value 312 and an early stopping callback with the patience of 4.
     # You can change the amount of epochs by typing "epochs = X" into the Trainer constructor.
     # If you want to train a model by loading the weights of an allready trained model,
     # use the load_model method from the OurModel class.
