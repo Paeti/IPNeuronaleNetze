@@ -24,15 +24,15 @@
                         <form class="predictionForm" action="" method="post">
                             <div class="predictionForm__leftInput">
                                 <input type="text" name="age" id="age" class="input" autofocus>
-                                <label class="label" for="age">Alter</label>
+                                <label class="label" for="age" id="agelabel">Alter</label>
                             </div>
                             <div class="predictionForm__rightInput">
                                 <input type="text" name="gender" id="gender" class="input">
-                                <label class="label" for="gender">Geschlecht</label>
+                                <label class="label" for="gender" id="genderlabel">Geschlecht</label>
                             </div>
                             <div class="predictionForm__lowInput">
                                 <input type="checkbox" name="save" id="save" class="input">
-                                <label class="label" for="save">Bild sichern?</label>
+                                <label class="label" for="save" id="savelabel">Bild sichern?</label>
                             </div>
                         </form>
                     </div>
@@ -100,6 +100,13 @@
             var dataURL = canvas.toDataURL("image/png");
             document.getElementById('age').value = "...";
             document.getElementById('gender').value = "...";
+            document.getElementById('save').clicked = false;
+            document.getElementById('age').style.display = "block"
+            document.getElementById('gender').style.display = "block"
+            document.getElementById('save').style.display = "block"
+            document.getElementById('agelabel').style.display = "block"
+            document.getElementById('genderlabel').style.display = "block"
+            document.getElementById('savelabel').style.display = "block"
             $.ajax({
                 type: "POST",
                 dataType: "json",
@@ -112,7 +119,17 @@
                     document.getElementById('gender').value = data.gender;
                     ID = data.id;
                     document.getElementById("button").style.display = "inline";
-                    document.querySelector('.card__side--back-heading').innerHTML = 'Deine Ergebnisse:';
+                    if (data.id != 0) {
+                        document.querySelector('.card__side--back-heading').innerHTML = 'Deine Ergebnisse:';
+                    } else {
+                        document.getElementById('age').style.display = "none"
+                        document.getElementById('gender').style.display = "none"
+                        document.getElementById('save').style.display = "none"
+                        document.getElementById('agelabel').style.display = "none"
+                        document.getElementById('genderlabel').style.display = "none"
+                        document.getElementById('savelabel').style.display = "none"
+                        document.querySelector('.card__side--back-heading').innerHTML = 'Leider konnte kein Gesicht erkannt werden.';
+                    }
                 }
             });
         };
@@ -122,8 +139,8 @@
             var age = document.getElementById("age").value;
             var gender = document.getElementById("gender").value;
             var checkbox = document.getElementById('save');
-            if (gender != "M" && gender != "W" || parseInt(age) <= 0 || parseInt(age) > 100 || parseInt(age) == undefined || parseInt(age) == NaN) {
-                alert("Bitte schreiben Sie nur valide Dinge in das Form")
+            if (gender != "M" && gender != "W" || parseInt(age) < 0 || parseInt(age) > 100 || parseInt(age) == undefined || parseInt(age) == NaN) {
+                alert("Bitte schreiben Sie nur valide Eingaben in das Form")
                 return false
             }
             if (checkbox.checked) {
