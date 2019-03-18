@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 class Dataset:
 
-    face_cascade = cv.CascadeClassifier('../data/haarcascade_frontalface_default.xml')
+    face_cascade = cv.CascadeClassifier('../data_loader/haarcascade_frontalface_default.xml')
 
     def createFolder(self, directory):
         try:
