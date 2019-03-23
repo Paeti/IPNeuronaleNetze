@@ -99,23 +99,28 @@ class Dataset:
         delta = 5
 
         for a in full_path2:
-           tmp_fix = ""
-           fix = a.split('/')
-        for idx, fix_1 in enumerate(fix):
-            tmp_fix = tmp_fix + fix_1
-            if idx == 4:
-                tmp_fix = tmp_fix + "\\"
-            elif idx < 5:
-                tmp_fix = tmp_fix + "/"
-        
-            b = tmp_fix.split('\\')
-            full_path.append(b[1])
+            b = a.split('\\')
+            try:
+                full_path.append(b[1])
+            except:
+                for a in fullpath2:
+                    tmp_fix = ""
+                    fix = a.split('/')
+                    for idx, fix_1 in enumerate(fix):
+                        tmp_fix = tmp_fix + fix_1
+                        if idx == 4:
+                            tmp_fix = tmp_fix + "\\"
+                        elif idx < 5:
+                            tmp_fix = tmp_fix + "/"
+                    b = tmp_fix.split('\\')
+                    full_path.append(b[1])
+
             b = b[1].split('.')
 
             c = b[0].split('A')
             d = c[1].strip('a')
             d = d.strip('b')
-            age.append(d)
+            age.append(d)        
 
         print("Printing Images to Classification Folders")
 
