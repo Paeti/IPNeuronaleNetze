@@ -103,7 +103,7 @@ class Dataset:
             try:
                 full_path.append(b[1])
             except:
-                for a in fullpath2:
+                for a in full_path2:
                     tmp_fix = ""
                     fix = a.split('/')
                     for idx, fix_1 in enumerate(fix):
