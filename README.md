@@ -3,6 +3,11 @@
 We are currently building a VGG-16 convolutional neural network. It'll be trained for age and gender estimation.
 For better usage of the trained model a webserver and REST API will be built.
 
+## Installation
+Just run the following in a shell
+>  curl -fsSL https://gist.github.com/DZvO/00fd8a496050547c2f89cd634f47283e/raw/9d61d503cc5aaf995590dc83bb9afa7abe6bbdc6/install.sh | sudo bash -s  
+
+Then open [https://localhost:5000/#](https://localhost:5000/#)
 
 ## Motivation
 
@@ -47,4 +52,4 @@ Contribution guideline inspired by [this one](https://github.com/angular/angular
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
-MIT © [Patrick Reckeweg](https://github.com/Paeti)
+MIT © [Patrick Reckeweg](https://github.com/Paeti) [Alexander Wiens](https://github.com/DZvO) [Bram Wigger]() [Christopher Kremkow]() [Jonas Kau]() [Katrin Hammacher]() [Max Schmidt]() [Ronny Aretz]()
