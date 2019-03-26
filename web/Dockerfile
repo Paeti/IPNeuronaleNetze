@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
 
-MAINTAINER Patrick Reckeweg
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update -y && apt-get install -y \
   python-pip \
   python-dev \
