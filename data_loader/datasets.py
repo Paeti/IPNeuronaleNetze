@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 class Dataset:
 
-    face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
+    face_cascade = cv.CascadeClassifier('../data_loader/haarcascade_frontalface_default.xml')
 
     def createFolder(self, directory):
         try:
@@ -99,34 +99,49 @@ class Dataset:
         delta = 5
 
         for a in full_path2:
-            b = a.split('\\')
+            tmp_fix = ""
+            fix = a.split('/')
+            for idx, fix_1 in enumerate(fix):
+                tmp_fix = tmp_fix + fix_1
+                if idx == 4:
+                    tmp_fix = tmp_fix + "\\"
+                elif idx < 5:
+                    tmp_fix = tmp_fix + "/"
+            b = tmp_fix.split('\\')
             full_path.append(b[1])
+
             b = b[1].split('.')
+            print("b0:" + b[0])
 
             c = b[0].split('A')
             d = c[1].strip('a')
             d = d.strip('b')
-            age.append(d)
+            print("age from path: " + d)
+            age.append(d)        
 
         print("Printing Images to Classification Folders")
 
+        print("len of full_path :" + str(len(full_path)))
+
         for idx, val in enumerate(full_path):
+            print("idx: " + str(idx))
             img = cv.imread(image_directory + "/FGNET/images/" + val)
             faces = self.face_cascade.detectMultiScale(img, 1.8, 5)
             for (x, y, w, h) in faces:
                 cip = img[y - delta:y + h + delta, x - delta:x + w + delta].copy()
                 try:
                     cip = cv.resize(cip, (224, 224))
+                    print(len(faces))
                     i = random.random()
                     if i > 0.5:
                         cv.imwrite(classification_target_directory + "/Train/" + str(int(age[idx])) + "/" + val, cip)
-                        print("Written: " + classification_target_directory + "/Train/" + str(int(age[idx])) + "/" + val)
+                        #print("Written: " + classification_target_directory + "/Train/" + str(int(age[idx])) + "/" + val)
                     elif i < 0.25:
                         cv.imwrite(classification_target_directory + "/Valid/" + str(int(age[idx])) + "/" + val, cip)
-                        print("Written: " + classification_target_directory + "/Valid/" + str(int(age[idx])) + "/" + val)
+                        #print("Written: " + classification_target_directory + "/Valid/" + str(int(age[idx])) + "/" + val)
                     else:
                         cv.imwrite(classification_target_directory + "/Test/" + str(int(age[idx])) + "/" + val, cip)
-                        print("Written: " + classification_target_directory + "/Test/" + str(int(age[idx])) + "/" + val)
+                        #print("Written: " + classification_target_directory + "/Test/" + str(int(age[idx])) + "/" + val)
                 except:
                     print("Resize Fail")
 

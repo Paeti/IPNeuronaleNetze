@@ -10,7 +10,7 @@ import json
 class Cback:
 
         def __init__(self):                
-			self.batchsize = []
+                self.batchsize = []
 
         def makeCb(self):
                 #images_validation, labels_validation = self.loadData(self.validation_dataset_filepath)
@@ -26,8 +26,8 @@ class Cback:
                 json_logging_callback = callbacks.LambdaCallback(
                         on_epoch_end=lambda epoch, logs: json_log.write(
                                 json.dumps({'epoch': epoch, 'loss': logs['loss'], 
-											'mae': logs['mean_absolute_error'], 'val_loss':logs['val_loss'],
-											'val_mae':logs['val_mean_absolute_error']}) + '\n'),
+					'mae': logs['mean_absolute_error'], 'val_loss':logs['val_loss'],
+					'val_mae':logs['val_mean_absolute_error']}) + '\n'),
                         on_train_end=lambda logs: json_log.close()
                 )
 
@@ -42,7 +42,7 @@ class Cback:
                 callback =[callbacks.EarlyStopping(monitor='val_loss', patience=4, mode = 'auto'), batch_print_callback,
 							json_logging_callback, cleanup_callback]
 			
-		return callback
+                return callback
 		
 		
 	

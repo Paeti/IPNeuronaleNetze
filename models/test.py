@@ -3,12 +3,13 @@ sys.path.append("/home/ip/IPNeuronaleNetze")
 sys.path.append("/home/ip/IPNeuronaleNetze/trainers")
 from models.OurModel import OurModel
 from Trainer import Trainer
+from data_loader.datasets import Dataset
 import tensorflow as tf
 
 # Please enter filepath to the dataset for unittests
 # Take in mind to choose a small one. Due to tf.test.TestCase class the single 
 # trainingsteps will take longer than normal
-filepath = "/home/ip/IPNeuronaleNetze/data/LAP/"
+filepath = "../data/classification/age/"
 
 class modelTest(tf.test.TestCase):
 
@@ -25,24 +26,24 @@ class modelTest(tf.test.TestCase):
 
     # Test whether model will be saved and loaded properly
     def test_model_get_saved_and_loaded_correctly(self):
-                with self.test_session():
-                        model = OurModel(0)
-                        trainer = Trainer(model.model,filepath + "Valid",
-                                filepath + "Valid", filepath + "Valid",
-                                identifier = 0, epochs = 1,
-                                save_model = True)
-                        trainer.train()
-                        model_load = OurModel(0)
-                        model_load.load_model(trainer.saved_model_path, 0)
-                        a = trainer.model.get_weights()
-                        b = model_load.model.get_weights()
-                        equal = True
-                        while len(a) != 0:
-                                c = a.pop()
-                                d = b.pop()
-                                if(c != d).any():
-                                        equal = False
-                        self.assertEqual(True,equal)
+        with self.test_session():
+            model = OurModel(0)
+            trainer = Trainer(model.model,filepath + "Valid",
+                    filepath + "Valid", filepath + "Valid",
+                    identifier = 0, epochs = 1,
+                    save_model = True)
+            trainer.train()
+            model_load = OurModel(0)
+            model_load.load_model(trainer.saved_model_path, 0)
+            a = trainer.model.get_weights()
+            b = model_load.model.get_weights()
+            equal = True
+            while len(a) != 0:
+                    c = a.pop()
+                    d = b.pop()
+                    if(c != d).any():
+                            equal = False
+            self.assertEqual(True,equal)
 
     # Test whether the weigts are changed after one step of training
     def test_one_training_step(self):
@@ -97,4 +98,16 @@ class modelTest(tf.test.TestCase):
             self.assertEqual(length,24) 
 
 if __name__ == '__main__':
+    dataset = Dataset()
+
+    dataset.createFolder("../data/classification")
+    dataset.createClassificationFolders("../data/classification/age/Train")
+    dataset.createClassificationFolders("../data/classification/age/Valid")
+    dataset.createClassificationFolders("../data/classification/age/Test")
+    #LAP
+    dataset.downloadAndUnzip("http://158.109.8.102/AppaRealAge/appa-real-release.zip", "../data/appa-real-release.zip",     "../data/appa-real-release")
+    dataset.readAndPrintDataImagesLAP("../data/appa-real-release", "train", "../data/classification/age/Train")
+    dataset.readAndPrintDataImagesLAP("../data/appa-real-release", "valid", "../data/classification/age/Valid")
+    dataset.readAndPrintDataImagesLAP("../data/appa-real-release", "test", "../data/classification/age/Test")
+
     tf.test.main() 
