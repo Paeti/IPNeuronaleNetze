@@ -18,7 +18,7 @@ html5lib==0.999
 httplib2==0.9.1
 idna==2.0
 indicator-cpufreq==0.2.2
-Jinja2==2.8
+Jinja2==2.11.3
 Keras-Applications==1.0.7
 Keras-Preprocessing==1.0.9
 language-selector==0.1
