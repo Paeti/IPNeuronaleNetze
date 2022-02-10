@@ -60,7 +60,7 @@ sessioninstaller==0.0.0
 six==1.12.0
 system-service==0.3
 tensorboard==1.13.1
-tensorflow==1.15.0
+tensorflow==2.5.3
 tensorflow-estimator==1.13.0
 termcolor==1.1.0
 ubuntu-drivers-common==0.0.0
