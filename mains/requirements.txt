@@ -28,7 +28,7 @@ Mako==1.0.3
 Markdown==3.1
 MarkupSafe==0.23
 mock==2.0.0
-numpy==1.16.2
+numpy==1.22.0
 oauthlib==1.0.3
 onboard==1.2.0
 opencv-python-headless==4.0.1.24
